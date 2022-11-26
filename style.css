@@ -1,11 +1,10 @@
 * {
-  color: #000000;
   text-decoration: none;
   font-family: 'Microsoft YaHei UI', Arial;
 }
 
 html {
-  background-image: linear-gradient(to bottom right, #00b7ff, #00e1ff);
+  background-image: /img/bgr.png;
 }
 
 html,
@@ -16,7 +15,7 @@ body {
 }
 
 a.link {
-  color: #0091ff;
+  color: #0078d7;
 }
 
 .left {
