@@ -4,7 +4,7 @@
 }
 
 html {
-  background-image: url("/img/bgr.png") no-repeat center;
+  background-image: url("/img/bgr.png");
 }
 
 html,
