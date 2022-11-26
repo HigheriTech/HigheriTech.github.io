@@ -79,27 +79,3 @@ a.off {
   box-shadow: none;
   border: none;
 }
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) { 
-  * {
-    color: #FFFFFF;
-  }
-
-  html {
-    background-image: /img/bgr.png;
-  }
-
-  #main {
-    background: #000000;
-    border: 2px solid #000000;
-  }
-
-  #download {
-    content: url("/img/dark/download.png");
-  }
-
-  #back {
-    content: url("/img/dark/back.png");
-  }
-}
