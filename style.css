@@ -4,7 +4,7 @@
 }
 
 html {
-  background-image: linear-gradient(to bottom right, #00b7ff, #00e1ff);
+  background-image: /img/bgr.jpg;
 }
 
 html,
@@ -15,7 +15,7 @@ body {
 }
 
 a.link {
-  color: #0091ff;
+  color: #0078d7;
 }
 
 .left {
