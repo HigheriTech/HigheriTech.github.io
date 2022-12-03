@@ -4,7 +4,7 @@
 }
 
 html {
-  background-image: url("/img/bgr.png");
+  background-image: url("/img/bgr.png") no-repeat center;
 }
 
 html,
@@ -78,31 +78,4 @@ a.off {
   left: 0px;
   box-shadow: none;
   border: none;
-}
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) { 
-  * {
-    color: #FFFFFF;
-  }
-
-  a.link {
-  color: #0078d7;
-}
-  
-  html {
-    background-image: url("/img/bgr.png") no-repeat center;
-  }
-
-  #main {
-    background: #000000;
-    border: 2px solid #000000;
-  }
-
-  #download {
-    content: url("/img/dark/download.png");
-  }
-
-  #back {
-    content: url("/img/dark/back.png");
-  }
 }
