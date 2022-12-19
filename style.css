@@ -52,7 +52,7 @@ a.off {
 
   /* 绝对居中 */
   width: 42%;
-  height: 89%;
+  height: 90%;
   position: absolute;
   left: 0;
   top: 0;
@@ -71,8 +71,8 @@ a.off {
 }
 
 #main.mobile {
-  width: 100%;
-  height: 85%;
+  width: 90%;
+  height: 80%;
   position: absolute;
   top: 0px;
   left: 0px;
