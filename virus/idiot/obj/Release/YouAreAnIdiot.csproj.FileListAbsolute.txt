@@ -1,0 +1,12 @@
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\bin\Release\Idiot.html
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\bin\Release\youare.swf
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\bin\Release\YouAreAnIdiot.exe.config
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\bin\Release\YouAreAnIdiot.exe
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\bin\Release\YouAreAnIdiot.pdb
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.csproj.AssemblyReference.cache
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.Form1.resources
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.Properties.Resources.resources
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.csproj.GenerateResource.cache
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.csproj.CoreCompileInputs.cache
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.exe
+C:\Users\Asus\Downloads\a\YouAreAnIdiot-Fake-Virus\YouAreAnIdiot\obj\Release\YouAreAnIdiot.pdb
