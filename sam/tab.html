@@ -1,0 +1,72 @@
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="./sam/imgs/favicon-newtabpage.ico" />
+		<title>Sam's Tab</title>
+	</head>
+
+	<body>
+		<div class="bg">
+			<div class="content">
+			<p><font size="6" color="white">&#x6B22;&#x8FCE;Sam!</font></p>	
+	<br>		<br>		<form id="bdfm" target="_blank" name="bdfm" method="get" action="http://www.baidu.com/s">
+								<input type="text" class="search" id="search1" name="word" autocomplete="off" placeholder="&#x8F93;&#x5165;&#x4F60;&#x60F3;&#x641C;&#x7D22;&#x7684;&#x5185;&#x5BB9;" />
+				</form>
+			</div>
+		</div>
+	</body>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		
+		.bg {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			background: url("./sam/imgs/sam.png") no-repeat center;
+			background-size: cover;
+			z-index: 1;
+			transform: scale(1.2);
+		}
+		
+		.bg:after {
+			content: "";
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			background: inherit;
+			filter: blur(12px);
+			z-index: 2;
+		}
+		
+		.content {
+			position: absolute;
+			left: 50%;
+			top: 40%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			z-index: 3;
+		}
+		
+		.search {
+			width: 400px;
+			height: 35px;
+			border: none;
+			border-radius: 8px;
+			outline: 0;
+			background: rgba(225, 225, 225, 0.2);
+			color: #555666;
+			text-align: center;
+		}
+		
+		.search:focus {
+			background: rgba(225, 225, 225, 1);
+		}
+		body{ font-family:"ËÎÌו"}
+	</style>
+
+</html>
