@@ -1,2 +1,2 @@
 # HigheriTech.github.io
-Higher Tech's official website
+Higher Tech Official Website
