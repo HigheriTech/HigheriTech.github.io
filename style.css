@@ -58,7 +58,7 @@ html body {
 }
 
 html {
-  background-image: url("/img/bgr.jpg");
+  background-image: url("/img/bgr.JPG");
 }
 
 html,
@@ -140,7 +140,7 @@ a.off {
   }
 
   html {'
-    background-image: url("/img/bgr.jpg");
+    background-image: url("/img/bgr.JPG");
   }
 
   #main {
