@@ -36,8 +36,8 @@ nav .menu{
     display: inline-flex;
 }
 .menu ul li{
-list-style: none;
-margin-left: 7px;
+    list-style: none;
+    margin-left: 7px;
 }
 .menu ul li:first-child{
     margin-left: 0px;
