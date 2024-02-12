@@ -63,6 +63,7 @@ margin-left: 7px;
     background-size: cover;
     background-position: center;
     position: relative;
+    filter: blur(12px);
 }
 
 .img::before{
