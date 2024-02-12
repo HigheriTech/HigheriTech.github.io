@@ -59,6 +59,9 @@ html body {
 
 html {
   background-image: url("/img/bgr.png");
+  z-index:-1;
+  width: 100%;
+  filter: blur(2px);
 }
 
 html,
