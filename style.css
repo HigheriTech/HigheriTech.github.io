@@ -100,8 +100,8 @@ a.off {
 
 #main {
   /* 圆角 */
-  border-radius: 10px;
-  border: 2px solid #FFFFFF;
+  border-radius: 25px;
+  border: 6px solid #FFFFFF;
   padding: 35px;
 
   /* 绝对居中 */
