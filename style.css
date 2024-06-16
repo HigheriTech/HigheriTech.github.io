@@ -62,7 +62,7 @@ html body {
 
 html {
   /* 滚动条 */
-  overflow: scroll;
+  overflow: auto;
   background-image: url("/img/bgr.png");
 }
 
@@ -133,7 +133,7 @@ a.off {
   }
 
   /* 滚动条 */
-  overflow: scroll;
+  overflow: auto;
 
 #main.mobile {
   width: 100%;
