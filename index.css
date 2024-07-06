@@ -79,7 +79,7 @@ nav .menu{
 
 .center{
     position: absolute;
-    top: 52%;
+    top: 90%;
     left: 50%;
     transform: translate(-50%,-50%);
     width: 100%;
@@ -100,30 +100,30 @@ nav .menu{
 }
 
 .center .btns{
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .center .btns button{
-    height: 55ppx;
-    width: 170px;
-    border-radius: 5px;
+    height: 999ppx;
+    width: 300px;
+    border-radius: 10px;
     /* border: none; */
-    margin: 0 10px;
+    margin: 0 15px;
     border: 2px solid rgb(255, 255, 255);
-    font-size: 20px;
-    font-weight: 500;
-    padding: 5px 10px ;
+    font-size: 25px;
+    font-weight: 540;
+    padding: 45px 10px ;
     cursor: pointer;
     outline: none;
     transition: all 0.5 ease;
 }
 
 .center .btns button:first-child{
-    color: #ffffff;
-    background: none;
+    color: #000000;
+    background: #00020;
 }
 .center .btns button:first-child:hover{
-    background: none;
+    background: white;
     color: white;
 }
 
