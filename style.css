@@ -63,7 +63,7 @@ html body {
 html {
   /* 滚动条 */
   overflow: auto;
-  background-image: url("/img/bgr.png") no-repeat width: 100% height: 100%;
+  background-image: url("/img/bgr.png");
 }
 
 .button {
