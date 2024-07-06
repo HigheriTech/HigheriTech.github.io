@@ -69,8 +69,23 @@ html {
 .button {
     background-color: #0078d7;
     border: none;
+    border-radius: 6px;
     color: white;
     padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.bbtn {
+    background-color: #0078d7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 70px 80px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
