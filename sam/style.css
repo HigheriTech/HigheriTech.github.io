@@ -4,7 +4,7 @@
 }
 
 html {
-  background-image: url("/sam/imgs/sam.png");
+  background-image: url("./imgs/sam.png");
 }
 
 html,
@@ -51,7 +51,7 @@ a.off {
   padding: 20px;
 
   /* ¾ø¶Ô¾ÓÖÐ */
-  width: 42%;
+  width: 60%;
   height: 90%;
   position: absolute;
   left: 0;
