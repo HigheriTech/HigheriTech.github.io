@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HigheriDraft 2.0 - 活力多功能草稿记事本</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 顶栏优化 - 柔和的灰白色 */
+        header {
+            background: linear-gradient(90deg, #f5f7fa, #e4e8f0); /* 灰白色渐变 */
+            color: #2c3e50; /* 深色文字 */
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo i {
+            font-size: 26px;
+            color: #0078D7; /* 使用新强调色 */
+        }
+        
+        .logo h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .toolbar {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(0, 120, 215, 0.1); /* 半透明蓝色背景 */
+            color: #0078D7; /* 按钮文字使用新强调色 */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 120, 215, 0.2); /* 添加浅蓝色边框 */
+        }
+        
+        .btn:hover {
+            background: rgba(0, 120, 215, 0.2); /* 悬停时加深蓝色背景 */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn i {
+            font-size: 15px;
+        }
+        
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 侧边栏优化 - 柔和的灰白色 */
+        .sidebar {
+            width: 240px;
+            background: #f5f7fa; /* 柔和的灰白色背景 */
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 5;
+        }
+        
+        .mode-section, .tool-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50; /* 深色文字 */
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0078D7; /* 使用新强调色 */
+        }
+        
+        .mode-btn {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #2c3e50; /* 深色文字 */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mode-btn:hover, .mode-btn.active {
+            background: rgba(0, 120, 215, 0.15); /* 使用新强调色 */
+            transform: translateX(5px);
+            border-color: rgba(0, 120, 215, 0.3); /* 使用新强调色 */
+        }
+        
+        .mode-btn i {
+            font-size: 18px;
+            color: #0078D7; /* 使用新强调色 */
+        }
+        
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .tool {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #2c3e50; /* 深色文字 */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tool:hover, .tool.active {
+            background: rgba(0, 120, 215, 0.15); /* 使用新强调色 */
+            transform: scale(1.05);
+            border-color: rgba(0, 120, 215, 0.3); /* 使用新强调色 */
+        }
+        
+        .tool i {
+            font-size: 22px;
+            color: #0078D7; /* 使用新强调色 */
+        }
+        
+        .tool span {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .color-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .color {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color.active {
+            transform: scale(1.2);
+            border-color: #fff;
+            box-shadow: 0 0 0 2px #0078D7; /* 使用新强调色 */
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            color: #2c3e50; /* 深色文字 */
+        }
+        
+        .slider-container span {
+            font-weight: 500;
+            min-width: 70px;
+            font-size: 14px;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e6ed;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #0078D7; /* 使用新强调色 */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        .editor-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+            background: linear-gradient(90deg, #0078D7, #2c3e50); /* 使用新强调色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 5px 0;
+        }
+        
+        .format-tools {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .format-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid #d1d9e0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            color: #2c3e50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .format-btn:hover {
+            background: #e3eaf3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .workspace {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .editor-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        #text-editor {
+            flex: 1;
+            padding: 25px;
+            border: 2px solid #d1d9e0;
+            border-radius: 15px;
+            font-size: 18px;
+            line-height: 1.6;
+            outline: none;
+            overflow: auto;
+            background: white;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        #text-editor:focus {
+            border-color: #0078D7; /* 使用新强调色 */
+            box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2); /* 使用新强调色 */
+        }
+        
+        #drawing-canvas {
+            flex: 1;
+            border: 2px solid #d1d9e0;
+            border-radius: 15px;
+            background: white;
+            cursor: crosshair;
+            display: none;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .preview-area {
+            width: 320px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .preview-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .notes-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 5px;
+        }
+        
+        .note-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e0e6ed;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .note-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #0078D7; /* 使用新强调色 */
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+        
+        .note-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #2c3e50;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .note-date {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .note-content {
+            font-size: 14px;
+            color: #34495e;
+            max-height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        
+        .drawing-preview {
+            max-width: 100%;
+            max-height: 100px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .note-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .note-item:hover .note-actions {
+            opacity: 1;
+        }
+        
+        .note-action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .note-action-btn:hover {
+            background: rgba(0,0,0,0.1);
+            transform: scale(1.1);
+        }
+        
+        /* 删除按钮优化 - 红色背景白色叉叉 */
+        .delete-btn {
+            background-color: #e74c3c; /* 红色背景 */
+            color: white !important; /* 白色图标 */
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b; /* 悬停时加深红色 */
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #e0e6ed;
+            background: white;
+            font-weight: 500;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .empty-notes {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+        
+        .empty-notes i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+            color: #0078D7; /* 使用新强调色 */
+        }
+        
+        .empty-notes p {
+            font-size: 16px;
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .workspace {
+                flex-direction: column;
+            }
+            
+            .preview-area {
+                width: 100%;
+                height: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .mode-section, .tool-section {
+                flex: 1;
+                min-width: 200px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 12px;
+            }
+            
+            .toolbar {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>HigheriDraft 活力多功能草稿记事本 ( Build 25071 T )</h1>
+            </div>
+            <div class="toolbar">
+                <button class="btn" id="save-btn">
+                    <i class="fas fa-save"></i> 保存
+                </button>
+                <button class="btn" id="clear-btn">
+                    <i class="fas fa-trash-alt"></i> 清除
+                </button>
+                <button class="btn" id="download-btn">
+                    <i class="fas fa-download"></i> 下载
+                </button>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="mode-section">
+                    <div class="section-title">编辑模式</div>
+                    <div class="mode-btn active" id="text-mode">
+                        <i class="fas fa-font"></i>
+                        <span>文本编辑</span>
+                    </div>
+                    <div class="mode-btn" id="draw-mode">
+                        <i class="fas fa-paint-brush"></i>
+                        <span>手写绘图</span>
+                    </div>
+                </div>
+                
+                <div class="mode-section">
+                    <div class="section-title">存储模式</div>
+                    <div class="mode-btn active" id="draft-mode">
+                        <i class="fas fa-file-alt"></i>
+                        <span>草稿模式</span>
+                    </div>
+                    <div class="mode-btn" id="note-mode">
+                        <i class="fas fa-bookmark"></i>
+                        <span>记事本模式</span>
+                    </div>
+                </div>
+                
+                <div class="tool-section">
+                    <div class="section-title">绘图工具</div>
+                    <div class="tools">
+                        <div class="tool active" id="pen-tool">
+                            <i class="fas fa-pen"></i>
+                            <span>画笔</span>
+                        </div>
+                        <div class="tool" id="eraser-tool">
+                            <i class="fas fa-eraser"></i>
+                            <span>橡皮擦</span>
+                        </div>
+                    </div>
+                    
+                    <div class="color-picker">
+                        <div class="color active" style="background-color: #000000;"></div>
+                        <div class="color" style="background-color: #e74c3c;"></div>
+                        <div class="color" style="background-color: #0078D7;"></div>
+                        <div class="color" style="background-color: #2ecc71;"></div>
+                        <div class="color" style="background-color: #f39c12;"></div>
+                        <div class="color" style="background-color: #9b59b6;"></div>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <span>画笔大小:</span>
+                        <input type="range" id="brush-size" min="1" max="20" value="5">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="editor-header">
+                    <div class="editor-title" id="editor-title">草稿 - 文本编辑</div>
+                    <div class="format-tools" id="text-format-tools">
+                        <button class="format-btn" id="bold-btn"><i class="fas fa-bold"></i></button>
+                        <button class="format-btn" id="italic-btn"><i class="fas fa-italic"></i></button>
+                        <button class="format-btn" id="underline-btn"><i class="fas fa-underline"></i></button>
+                        <button class="format-btn" id="list-ul-btn"><i class="fas fa-list-ul"></i></button>
+                        <button class="format-btn" id="list-ol-btn"><i class="fas fa-list-ol"></i></button>
+                    </div>
+                </div>
+                
+                <div class="workspace">
+                    <div class="editor-area">
+                        <div id="text-editor" contenteditable="true">欢迎使用全屏多功能草稿记事本！<br><br>• 左侧可切换文本/绘图模式<br>• 草稿模式：临时保存内容<br>• 记事本模式：永久保存笔记<br>• 右侧可管理保存的笔记</div>
+                        <canvas id="drawing-canvas"></canvas>
+                    </div>
+                    
+                    <div class="preview-area">
+                        <div class="preview-header">
+                            <div class="preview-title">保存的笔记</div>
+                            <button class="btn" id="clear-notes-btn" style="padding: 6px 12px; font-size: 14px;">
+                                <i class="fas fa-trash"></i> 清空
+                            </button>
+                        </div>
+                        <div class="notes-container" id="notes-container">
+                            <div class="empty-notes">
+                                <i class="fas fa-sticky-note"></i>
+                                <p>暂无保存的笔记</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>多功能草稿记事本 &copy; 2025 | 文本与绘图自由切换 | 草稿临时保存 | 记事本永久保存</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM元素
+        const textModeBtn = document.getElementById('text-mode');
+        const drawModeBtn = document.getElementById('draw-mode');
+        const draftModeBtn = document.getElementById('draft-mode');
+        const noteModeBtn = document.getElementById('note-mode');
+        const saveBtn = document.getElementById('save-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const clearNotesBtn = document.getElementById('clear-notes-btn');
+        const textEditor = document.getElementById('text-editor');
+        const drawingCanvas = document.getElementById('drawing-canvas');
+        const editorTitle = document.getElementById('editor-title');
+        const notesContainer = document.getElementById('notes-container');
+        
+        // 绘图工具
+        const penTool = document.getElementById('pen-tool');
+        const eraserTool = document.getElementById('eraser-tool');
+        const brushSizeSlider = document.getElementById('brush-size');
+        const colors = document.querySelectorAll('.color');
+        
+        // 文本格式化工具
+        const boldBtn = document.getElementById('bold-btn');
+        const italicBtn = document.getElementById('italic-btn');
+        const underlineBtn = document.getElementById('underline-btn');
+        const listUlBtn = document.getElementById('list-ul-btn');
+        const listOlBtn = document.getElementById('list-ol-btn');
+        
+        // 状态变量
+        let isDrawingMode = false;
+        let isDraftMode = true;
+        let isDrawing = false;
+        let currentColor = '#000000';
+        let brushSize = 5;
+        let currentTool = 'pen';
+        
+        // 绘图上下文
+        const ctx = drawingCanvas.getContext('2d');
+        
+        // 初始化函数
+        function init() {
+            // 设置画布尺寸
+            resizeCanvas();
+            
+            // 设置初始模式
+            switchMode('text');
+            switchStorageMode('draft');
+            
+            // 初始化事件监听器
+            setupEventListeners();
+            
+            // 加载保存的笔记
+            loadSavedNotes();
+            
+            // 恢复草稿内容
+            restoreDraft();
+        }
+        
+        // 调整画布大小
+        function resizeCanvas() {
+            drawingCanvas.width = drawingCanvas.offsetWidth;
+            drawingCanvas.height = drawingCanvas.offsetHeight;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = brushSize;
+            
+            // 初始化画布背景
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 模式切换
+            textModeBtn.addEventListener('click', () => switchMode('text'));
+            drawModeBtn.addEventListener('click', () => switchMode('draw'));
+            draftModeBtn.addEventListener('click', () => switchStorageMode('draft'));
+            noteModeBtn.addEventListener('click', () => switchStorageMode('note'));
+            
+            // 工具按钮
+            saveBtn.addEventListener('click', saveContent);
+            clearBtn.addEventListener('click', clearContent);
+            downloadBtn.addEventListener('click', downloadContent);
+            clearNotesBtn.addEventListener('click', clearAllNotes);
+            
+            // 绘图工具
+            penTool.addEventListener('click', () => selectTool('pen'));
+            eraserTool.addEventListener('click', () => selectTool('eraser'));
+            brushSizeSlider.addEventListener('input', updateBrushSize);
+            colors.forEach(color => {
+                color.addEventListener('click', () => selectColor(color));
+            });
+            
+            // 文本格式化
+            boldBtn.addEventListener('click', () => formatText('bold'));
+            italicBtn.addEventListener('click', () => formatText('italic'));
+            underlineBtn.addEventListener('click', () => formatText('underline'));
+            listUlBtn.addEventListener('click', () => formatText('insertUnorderedList'));
+            listOlBtn.addEventListener('click', () => formatText('insertOrderedList'));
+            
+            // 画布事件
+            drawingCanvas.addEventListener('mousedown', startDrawing);
+            drawingCanvas.addEventListener('mousemove', draw);
+            drawingCanvas.addEventListener('mouseup', stopDrawing);
+            drawingCanvas.addEventListener('mouseout', stopDrawing);
+            drawingCanvas.addEventListener('touchstart', handleTouchStart);
+            drawingCanvas.addEventListener('touchmove', handleTouchMove);
+            drawingCanvas.addEventListener('touchend', stopDrawing);
+            
+            // 窗口大小调整
+            window.addEventListener('resize', resizeCanvas);
+            
+            // 内容更改时自动保存草稿
+            textEditor.addEventListener('input', autoSaveDraft);
+        }
+        
+        // 触摸事件处理
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            drawingCanvas.dispatchEvent(mouseEvent);
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            drawingCanvas.dispatchEvent(mouseEvent);
+        }
+        
+        // 切换编辑模式
+        function switchMode(mode) {
+            isDrawingMode = mode === 'draw';
+            
+            // 更新UI
+            textModeBtn.classList.toggle('active', !isDrawingMode);
+            drawModeBtn.classList.toggle('active', isDrawingMode);
+            
+            // 显示/隐藏编辑器
+            textEditor.style.display = isDrawingMode ? 'none' : 'block';
+            drawingCanvas.style.display = isDrawingMode ? 'block' : 'none';
+            
+            // 更新标题
+            const modeName = isDrawingMode ? '绘图' : '文本编辑';
+            const storageMode = isDraftMode ? '草稿' : '记事本';
+            editorTitle.textContent = `${storageMode} - ${modeName}`;
+            
+            // 调整画布大小
+            if (isDrawingMode) {
+                resizeCanvas();
+            }
+        }
+        
+        // 切换存储模式
+        function switchStorageMode(mode) {
+            isDraftMode = mode === 'draft';
+            
+            // 更新UI
+            draftModeBtn.classList.toggle('active', isDraftMode);
+            noteModeBtn.classList.toggle('active', !isDraftMode);
+            
+            // 更新标题
+            const modeName = isDrawingMode ? '绘图' : '文本编辑';
+            const storageMode = isDraftMode ? '草稿' : '记事本';
+            editorTitle.textContent = `${storageMode} - ${modeName}`;
+            
+            // 恢复内容
+            if (isDraftMode) {
+                restoreDraft();
+            }
+        }
+        
+        // 选择工具
+        function selectTool(tool) {
+            currentTool = tool;
+            
+            // 更新UI
+            penTool.classList.toggle('active', tool === 'pen');
+            eraserTool.classList.toggle('active', tool === 'eraser');
+            
+            // 设置绘图上下文
+            if (tool === 'eraser') {
+                ctx.strokeStyle = '#ffffff';
+            } else {
+                ctx.strokeStyle = currentColor;
+            }
+        }
+        
+        // 更新画笔大小
+        function updateBrushSize() {
+            brushSize = parseInt(brushSizeSlider.value);
+            ctx.lineWidth = brushSize;
+        }
+        
+        // 选择颜色
+        function selectColor(colorElement) {
+            currentColor = colorElement.style.backgroundColor;
+            
+            // 更新UI
+            colors.forEach(color => color.classList.remove('active'));
+            colorElement.classList.add('active');
+            
+            // 设置绘图上下文
+            if (currentTool === 'pen') {
+                ctx.strokeStyle = currentColor;
+            }
+        }
+        
+        // 文本格式化
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            textEditor.focus();
+        }
+        
+        // 开始绘图
+        function startDrawing(e) {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        }
+        
+        // 绘图过程
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        }
+        
+        // 停止绘图
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        // 自动保存草稿
+        function autoSaveDraft() {
+            if (isDraftMode) {
+                if (isDrawingMode) {
+                    // 保存绘图
+                    const dataURL = drawingCanvas.toDataURL();
+                    sessionStorage.setItem('draftDrawing', dataURL);
+                } else {
+                    // 保存文本
+                    sessionStorage.setItem('draftText', textEditor.innerHTML);
+                }
+            }
+        }
+        
+        // 恢复草稿
+        function restoreDraft() {
+            if (isDraftMode) {
+                if (isDrawingMode) {
+                    const dataURL = sessionStorage.getItem('draftDrawing');
+                    if (dataURL) {
+                        const img = new Image();
+                        img.onload = function() {
+                            ctx.drawImage(img, 0, 0);
+                        };
+                        img.src = dataURL;
+                    }
+                } else {
+                    const savedText = sessionStorage.getItem('draftText');
+                    if (savedText) {
+                        textEditor.innerHTML = savedText;
+                    }
+                }
+            }
+        }
+        
+        // 保存内容
+        function saveContent() {
+            if (isDraftMode) {
+                autoSaveDraft();
+                showNotification('草稿已自动保存');
+            } else {
+                // 记事本模式 - 永久保存
+                const title = prompt('请输入笔记标题:', `笔记 ${new Date().toLocaleDateString()}`);
+                if (title) {
+                    const note = {
+                        id: Date.now(),
+                        title: title,
+                        date: new Date().toLocaleString(),
+                        content: isDrawingMode ? drawingCanvas.toDataURL() : textEditor.innerHTML,
+                        isDrawing: isDrawingMode
+                    };
+                    
+                    saveNoteToStorage(note);
+                    loadSavedNotes();
+                    showNotification('笔记已保存');
+                }
+            }
+        }
+        
+        // 保存笔记到本地存储
+        function saveNoteToStorage(note) {
+            let notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.push(note);
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+        
+        // 加载保存的笔记
+        function loadSavedNotes() {
+            notesContainer.innerHTML = '';
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            
+            if (notes.length === 0) {
+                notesContainer.innerHTML = `
+                    <div class="empty-notes">
+                        <i class="fas fa-sticky-note"></i>
+                        <p>暂无保存的笔记</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按时间倒序排列
+            notes.sort((a, b) => b.id - a.id);
+            
+            notes.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-item';
+                noteElement.dataset.id = note.id;
+                noteElement.innerHTML = `
+                    <div class="note-header">
+                        <div class="note-title">${note.title}</div>
+                        <div class="note-date">${note.date}</div>
+                    </div>
+                    <div class="note-content">${note.isDrawing ? '[绘图]' : stripHtml(note.content)}</div>
+                    ${note.isDrawing ? `<img src="${note.content}" class="drawing-preview">` : ''}
+                    <div class="note-actions">
+                        <button class="note-action-btn delete-btn" title="删除笔记">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // 添加点击加载事件
+                noteElement.addEventListener('click', (e) => {
+                    if (!e.target.closest('.note-action-btn')) {
+                        if (confirm('是否加载此笔记？')) {
+                            loadNote(note);
+                        }
+                    }
+                });
+                
+                // 添加删除事件
+                const deleteBtn = noteElement.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm('确定要删除此笔记吗？')) {
+                        deleteNote(note.id);
+                    }
+                });
+                
+                notesContainer.appendChild(noteElement);
+            });
+        }
+        
+        // 删除笔记
+        function deleteNote(noteId) {
+            let notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes = notes.filter(note => note.id !== noteId);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            loadSavedNotes();
+            showNotification('笔记已删除');
+        }
+        
+        // 清空所有笔记
+        function clearAllNotes() {
+            if (confirm('确定要删除所有保存的笔记吗？此操作不可撤销！')) {
+                localStorage.removeItem('notes');
+                loadSavedNotes();
+                showNotification('所有笔记已删除');
+            }
+        }
+        
+        // 加载笔记
+        function loadNote(note) {
+            if (note.isDrawing) {
+                switchMode('draw');
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = note.content;
+            } else {
+                switchMode('text');
+                textEditor.innerHTML = note.content;
+            }
+            
+            // 切换到记事本模式
+            switchStorageMode('note');
+            showNotification('笔记已加载');
+        }
+        
+        // 清除内容
+        function clearContent() {
+            if (confirm('确定要清除当前内容吗？')) {
+                if (isDrawingMode) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                } else {
+                    textEditor.innerHTML = '';
+                }
+                
+                if (isDraftMode) {
+                    sessionStorage.removeItem('draftText');
+                    sessionStorage.removeItem('draftDrawing');
+                }
+            }
+        }
+        
+        // 下载内容
+        function downloadContent() {
+            if (isDrawingMode) {
+                // 下载绘图
+                const link = document.createElement('a');
+                link.download = `drawing-${new Date().getTime()}.png`;
+                link.href = drawingCanvas.toDataURL();
+                link.click();
+            } else {
+                // 下载文本
+                const textContent = textEditor.innerText;
+                const blob = new Blob([textContent], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.download = `note-${new Date().getTime()}.txt`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#0078D7'; // 使用新强调色
+            notification.style.color = 'white';
+            notification.style.padding = '12px 24px';
+            notification.style.borderRadius = '8px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            notification.style.fontWeight = '600';
+            notification.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(20px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 辅助函数：去除HTML标签
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+        
+        // 初始化应用
+        window.onload = init;
+    </script>
+</body>
+</html>
