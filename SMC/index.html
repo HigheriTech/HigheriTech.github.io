@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮Sam's Minecraft 优化版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4CAF50',
+                        secondary: '#8BC34A',
+                        accent: '#CDDC39',
+                        dark: '#0a0a0a',
+                        darker: '#1a1a2e',
+                        darkBlue: '#16213e',
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'brightness(1)' },
+                            '100%': { filter: 'brightness(1.3)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                },
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass {
+                @apply bg-white/10 backdrop-blur-2xl border border-white/20 rounded-xl;
+            }
+            .glass-hover {
+                @apply hover:bg-white/15 transition-all duration-300;
+            }
+            .btn-primary {
+                @apply bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/30 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary/50;
+            }
+            .btn-secondary {
+                @apply bg-white/10 text-white font-medium py-2 px-6 rounded-full transition-all duration-300 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30;
+            }
+            .text-gradient {
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+            }
+            .nav-link {
+                @apply relative text-white font-medium px-4 py-2 transition-all duration-300 hover:text-primary;
+            }
+            .nav-link::after {
+                @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+            }
+            .nav-link:hover::after {
+                @apply w-full;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 粒子背景 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+        
+        /* 鼠标拖尾效果 */
+        .mouse-trail-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .trail-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            pointer-events: none;
+            box-shadow: 
+                0 0 6px #4CAF50,
+                0 0 12px #4CAF5080,
+                inset 0 0 3px #81C784;
+            animation: fadeOut 1s ease-out forwards;
+            transform: translate(-50%, -50%);
+        }
+        
+        .trail-particle::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                #4CAF5040 50%, 
+                transparent 70%);
+            animation: shimmer 0.5s ease-out;
+        }
+        
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(360deg);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 导航栏滚动效果 */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            @apply bg-darker/80 backdrop-blur-lg shadow-lg;
+        }
+        
+        /* 时间轴动画 */
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 团队卡片悬停效果 */
+        .team-card {
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.2);
+        }
+        
+        /* 下载按钮脉动效果 */
+        .download-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: scale(0);
+            opacity: 0;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        /* 特性卡片悬停效果 */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* 表格行悬停效果 */
+        .comparison-table tr {
+            transition: all 0.2s ease;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-dark to-darkBlue text-white min-h-screen overflow-x-hidden">
+    <!-- 粒子背景 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 鼠标拖尾容器 -->
+    <div class="mouse-trail-container" id="mouseTrailContainer"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl glass py-4 px-6 z-50 transition-all duration-300">
+        <div class="flex justify-between items-center">
+            <div class="text-2xl font-bold text-gradient">⛏️Sam's MC 优化版</div>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="nav-link">特性对比</a>
+                <a href="#demo" class="nav-link">实机测试</a>
+                <a href="#timeline" class="nav-link">更新日志</a>
+                <a href="#team" class="nav-link">开发团队</a>
+                <a href="#download" class="nav-link">立即下载</a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button class="md:hidden text-white text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- 主页面 -->
+    <section class="hero min-h-screen flex flex-col justify-center items-center text-center px-6">
+        <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-gradient mb-6 animate-glow">🎮Sam's Minecraft 优化版</h1>
+        <p class="text-[clamp(1.1rem,3vw,1.5rem)] opacity-90 max-w-2xl mb-10">专为低配电脑优化的Minecraft整合包，让每台电脑都能流畅运行MC！[基于Minecraft 1.21.3]</p>
+        <a href="https://www.higheri.tech/SMC/SAMSMAC.zip" class="download-btn btn-primary text-[clamp(1.1rem,3vw,1.5rem)] py-6 px-12 animate-pulse-slow" target="_blank">
+            🎮 立即下载最新版
+        </a>
+        <p class="mt-6 text-white/80">还没有PCL？<a href="https://bbsmc.net/software/pcl" target="_blank" class="underline hover:text-primary transition-colors">点击下载最新版>></a></p>
+        <p class="mt-3 text-white/60 text-sm">下载历史版本<a href="https://share.feijipan.com/s/0j0wfNsz" target="_blank" class="underline hover:text-primary transition-colors">点击下载>></a></p>
+        
+        <!-- 向下滚动指示 -->
+        <div class="absolute bottom-10 animate-bounce">
+            <a href="#features" class="text-white/60 hover:text-primary transition-colors">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+    
+        <!-- 向下滚动指示 -->
+        <div class="absolute bottom-10 animate-bounce">
+            <a href="#features" class="text-white/60 hover:text-primary transition-colors">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+    
+    <!-- 特性对比 -->
+    <section id="features" class="py-24 px-6 max-w-6xl mx-auto">
+        <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold text-center mb-16 text-gradient">为什么选择Sam's优化版？</h2>
+        
+        <div class="glass p-8 rounded-2xl shadow-xl">
+            <div class="comparison-table overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-primary/20">
+                            <th class="py-4 px-6 text-left font-semibold">功能特性</th>
+                            <th class="py-4 px-6 text-center font-semibold">原版Minecraft</th>
+                            <th class="py-4 px-6 text-center font-semibold">其他整合包</th>
+                            <th class="py-4 px-6 text-center font-semibold">Sam's优化版</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-4 px-6">低配电脑优化</td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">内置常用MOD</td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">优化光影包</td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">材质包预装</td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">一键安装</td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">稳定性保证</td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6">持续更新</td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-red-500 text-xl">❌</span></td>
+                            <td class="py-4 px-6 text-center"><span class="text-green-500 text-xl">✅</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="feature-card glass p-6 rounded-xl shadow-lg">
+                    <div class="text-primary text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-semibold mb-3">性能优化</h3>
+                    <p class="text-white/80">采用Iris + Sodium + Fabric方案，相比原版提升60%以上帧数，让4GB内存也能流畅运行！</p>
+                </div>
+                
+                <div class="feature-card glass p-6 rounded-xl shadow-lg">
+                    <div class="text-primary text-4xl mb-4">🎨</div>
+                    <h3 class="text-xl font-semibold mb-3">视觉体验</h3>
+                    <p class="text-white/80">内置5个低配光影包和精选材质包，在保证性能的同时提供绝佳的视觉效果！</p>
+                </div>
+                
+                <div class="feature-card glass p-6 rounded-xl shadow-lg">
+                    <div class="text-primary text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-semibold mb-3">即开即用</h3>
+                    <p class="text-white/80">所有MOD和光影包内置，将下载好的 .mrpack 文件直接拖入PCL启动器即可使用，告别复杂的安装过程！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 实机测试 -->
+    <section id="demo" class="py-24 px-6 max-w-6xl mx-auto">
+        <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold text-center mb-16 text-gradient">实机测试</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass rounded-xl overflow-hidden shadow-xl transform transition-all duration-500 hover:scale-[1.02]">
+                <img src="https://2.z.wiki/autoupload/20250526/4rpD/1631X639/image.png" alt="Sam's Minecraft 优化版实机测试" class="w-full h-auto object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">流畅运行</h3>
+                    <p class="text-white/80">Sam's Minecraft 优化版在低配电脑上的实机测试效果</p>
+                </div>
+            </div>
+            
+            <div class="glass rounded-xl overflow-hidden shadow-xl transform transition-all duration-500 hover:scale-[1.02]">
+                <img src="https://cdn.z.wiki/autoupload/20250527/4aed/920X468/image.png" alt="Sam's Minecraft 优化版光影加载测试" class="w-full h-auto object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">光影效果</h3>
+                    <p class="text-white/80">Sam's Minecraft 优化版光影加载测试效果</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 解决的痛点 -->
+    <section class="py-24 px-6 max-w-6xl mx-auto">
+        <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold text-center mb-16 text-gradient">传统Minecraft痛点 vs Sam优化版解决方案</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-2xl border-l-4 border-red-500">
+                <h3 class="text-2xl font-semibold text-red-400 mb-6">😤 传统痛点</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-red-500 text-xl mr-3 mt-1">❌</span>
+                        <span>低配电脑卡顿严重，帧数低于10FPS</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 text-xl mr-3 mt-1">❌</span>
+                        <span>MOD安装复杂，版本冲突频繁</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 text-xl mr-3 mt-1">❌</span>
+                        <span>光影包配置困难，效果与性能难平衡</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 text-xl mr-3 mt-1">❌</span>
+                        <span>材质包兼容性差，经常出现贴图错误</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 text-xl mr-3 mt-1">❌</span>
+                        <span>Java环境配置复杂，新手难以上手</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="glass p-8 rounded-2xl border-l-4 border-primary">
+                <h3 class="text-2xl font-semibold text-primary mb-6">🎉 Sam优化版解决方案</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl mr-3 mt-1">✅</span>
+                        <span>细节优化，4GB内存稳定40FPS+</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl mr-3 mt-1">✅</span>
+                        <span>优化Mod全部内置，版本完美兼容</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl mr-3 mt-1">✅</span>
+                        <span>多个低配光影预装，性能与美观并存</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl mr-3 mt-1">✅</span>
+                        <span>精选材质包，完美兼容无冲突</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary text-xl mr-3 mt-1">✅</span>
+                        <span>自动下载Java环境*，拖入即用零配置</span>
+                    </li>
+                </ul>
+                <p class="text-right text-white/60 text-sm mt-4">*自动下载Java环境：该功能为PCL自带</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 更新日志 -->
+    <section id="timeline" class="py-24 px-6 max-w-6xl mx-auto">
+        <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold text-center mb-16 text-gradient">更新日志</h2>
+        
+        <div class="space-y-8">
+            <!-- 2.0.0 更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.06.19</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🎉 2.0.0版本更新</div>
+                    <ul class="space-y-2 text-white/90">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>这是最后一个版本</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>删除其他材质包</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>去除攻击冷却</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 1.0.7 更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.06.15</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🎁 1.0.7版本更新</div>
+                    <ul class="space-y-2 text-white/90">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>新增1个主要材质包和3个备用材质包，提供更多视觉选择</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>将拿在手上的物体体积缩小25%，减少占用屏幕的体积，提升游戏视野</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>优化了光影包加载速度，提升约15%的加载性能</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>修复了部分玩家反馈的材质包不兼容问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>按键显示和方块描边功能仍在寻找兼容1.21.3的解决方案</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 1.0.6.2 更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.06.02</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">❌ 紧急更新</div>
+                    <ul class="space-y-2 text-white/90">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>修复了进入末地和下界时游戏崩溃退出，显示注入失败的问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>🌟这个问题在以往版本中存在，该版本已彻底解决</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 1.0.6 更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.06.01</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🎉 简化更新</div>
+                    <ul class="space-y-2 text-white/90">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>新增makeup d光影包，效果更好更低配，适合中低配电脑</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>更新原版minecraft1.21.3核心，确保游戏稳定性</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>不再将光影包等文件内置在整合包中，减少文件体积，整合包大小从1.2GB降至500MB</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 1.0.5 更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.05.24</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🎯 重大更新</div>
+                    <ul class="space-y-2 text-white/90">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>所有光影包和Mod内置，无需额外下载</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>增加5个低配光影，适配不同性能的电脑</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>mod更新到最稳定版本，确保游戏体验</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>删除"遥远的地平线"模组，减少兼容性问题</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>修复Mod无法注入问题，确保所有Mod正常工作</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>采用iris + sodium + fabric方案（由Alex_Pan建议），大幅提升游戏性能</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>修复材质包不显示问题，所有材质包均可正常使用</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-2">•</span>
+                            <span>在每个文件夹添加"提示"，使用方法为直接拖入pcl，简化安装流程</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 更早的更新 -->
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.05.21</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🔄 快速迭代</div>
+                    <p class="text-white/90">Sam开始制作整合包第二版，发布1.0.2.mrpack版本。更新内容包括：在mc文件夹新增"java"文件夹（由"爱玩电脑的李小子"建议），去除两个材质包。</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.05.20</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">🚀 首版发布</div>
+                    <p class="text-white/90">Sam发布Minecraft1.21.3整合包（优化版）1.0.0.zip，进行内测。希望大家测试完成后能反馈建议。</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item glass p-6 rounded-xl flex flex-col md:flex-row">
+                <div class="md:w-1/4 mb-4 md:mb-0">
+                    <div class="text-xl font-semibold text-primary">2025.05.19</div>
+                </div>
+                <div class="md:w-3/4 md:pl-8 relative">
+                    <div class="text-xl font-semibold mb-3">💡 项目启动</div>
+                    <p class="text-white/90">Sam有了制作专门为低配电脑优化的Minecraft整合包的想法，打算内置常用Mod和好看的材质包。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 团队成员 -->
+    <section id="team" class="py-24 px-6 max-w-6xl mx-auto">
+        <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold text-center mb-16 text-gradient">开发团队</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="team-card glass p-8 rounded-xl text-center transition-all duration-300 hover:shadow-xl">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/30">
+                    <img src="https://2.z.wiki/autoupload/20250525/taza/665X665/lQDPKIBPh0HpfffNApnNApmwz-A1OwNZT4UIE4hvfVWzAA-665-665.jpg" alt="Sam" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Sam</h3>
+                <p class="text-primary mb-4">项目发起人 & 主要开发者</p>
+                <p class="text-white/80 mb-6">负责整合包的整体设计、MOD开发和性能优化</p>
+                <a href="https://space.bilibili.com/392717577" target="_blank" class="btn-secondary inline-flex items-center">
+                    <i class="fa fa-external-link mr-2"></i> 访问B站主页
+                </a>
+            </div>
+            
+            <div class="team-card glass p-8 rounded-xl text-center transition-all duration-300 hover:shadow-xl">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/30">
+                    <img src="https://cdn.z.wiki/autoupload/20250525/V91h/1024X1024/lQDPJwmlIFyfi-fNBADNBACwwOuUkURWrZUIE4hulC-cAA-1024-1024.jpg" alt="爱玩电脑的李小子" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-xl font-semibold mb-2">爱玩电脑的李小子</h3>
+                <p class="text-primary mb-4">技术 & 网站前端开发</p>
+                <p class="text-white/80 mb-6">开发你们现在看见的网页，优化用户体验</p>
+                <a href="https://space.bilibili.com/643658420" target="_blank" class="btn-secondary inline-flex items-center">
+                    <i class="fa fa-external-link mr-2"></i> 访问B站主页
+                </a>
+            </div>
+            
+            <div class="team-card glass p-8 rounded-xl text-center transition-all duration-300 hover:shadow-xl">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-primary/30">
+                    <img src="https://2.z.wiki/autoupload/20250525/2L7b/500X500/lQLPJyEf-hvnfPfNAfTNAfSwN0NfCkW4H1AIE4hvHLHcAA-500-500.png" alt="Alex_Pan" class="w-full h-full object-cover">
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Alex_Pan</h3>
+                <p class="text-primary mb-4">性能优化砖家 & 网站后端开发</p>
+                <p class="text-white/80 mb-6">提出多种优化方案，大幅提升游戏性能；为网站提供后端支持</p>
+                <a href="https://space.bilibili.com/2032759759" target="_blank" class="btn-secondary inline-flex items-center">
+                    <i class="fa fa-external-link mr-2"></i> 访问B站主页
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 下载区域 -->
+    <section id="download" class="py-24 px-6 bg-gradient-to-r from-primary/10 to-secondary/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-[clamp(2rem,5vw,3rem)] font-bold mb-6 text-gradient">准备好体验了吗？</h2>
+            <p class="text-[clamp(1.1rem,3vw,1.5rem)] mb-10 opacity-90">最新版本：v2.0.0 | 版本：Minecraft 1.21.3 | 文件大小：约 9 MB</p>
+            <a href="https://www.higheri.tech/SMC/SAMSMAC.zip" class="download-btn btn-primary text-[clamp(1.2rem,3vw,1.6rem)] py-6 px-12 mb-6 inline-flex items-center" target="_blank">
+                <i class="fa fa-download mr-3"></i> 立即下载 Sam's MC优化版
+            </a>
+            <p class="text-white/80 mb-2">还没有PCL？<a href="https://bbsmc.net/software/pcl" target="_blank" class="underline hover:text-primary transition-colors">点击下载最新版>></a></p>
+            <p class="text-white/60 text-sm">使用方法：下载后直接拖入PCL启动器即可 | 推荐配置：4GB+ 内存（默认小飞机网盘，失效请联系作者）</p>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="py-12 px-6 bg-dark/80 text-center">
+        <p class="text-white/70 mb-4">© 2025 Sam's Minecraft 优化版 | 让每台电脑都能流畅运行MC | 最终解释权归作者所有</p>
+        <p class="text-white/50 text-sm">本项目完全免费，如有问题请联系开发团队B站账号评论区&私信</p>
+    </footer>
+    
+    <script>
+        // 粒子背景
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机位置
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // 随机大小
+                const size = 1 + Math.random() * 3;
+                
+                // 随机延迟
+                const delay = Math.random() * 5;
+                
+                // 随机速度
+                const duration = 20 + Math.random() * 40;
+                
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // 鼠标拖尾效果
+        function initMouseTrail() {
+            const container = document.getElementById('mouseTrailContainer');
+            let mouseX = 0;
+            let mouseY = 0;
+            let lastTime = 0;
+            const particleInterval = 30;
+            
+            function createParticle(x, y) {
+                const particle = document.createElement('div');
+                particle.className = 'trail-particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                const size = 6 + Math.random() * 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particle.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+            
+            function handleMouseMove(e) {
+                const currentTime = Date.now();
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                if (currentTime - lastTime > particleInterval) {
+                    createParticle(mouseX, mouseY);
+                    
+                    if (Math.random() > 0.5) {
+                        setTimeout(() => {
+                            const offsetX = (Math.random() - 0.5) * 20;
+                            const offsetY = (Math.random() - 0.5) * 20;
+                            createParticle(mouseX + offsetX, mouseY + offsetY);
+                        }, 50);
+                    }
+                    
+                    lastTime = currentTime;
+                }
+            }
+            
+            document.addEventListener('mousemove', handleMouseMove);
+            
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    handleMouseMove({
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                }
+            });
+        }
+        
+        // 导航栏滚动效果
+        function initNavbarScroll() {
+            const navbar = document.querySelector('.navbar');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+        
+        // 时间轴动画
+        function initTimelineAnimation() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            function checkVisibility() {
+                timelineItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    
+                    if (rect.top <= windowHeight * 0.85) {
+                        item.classList.add('visible');
+                    }
+                });
+            }
+            
+            // 初始检查
+            checkVisibility();
+            
+            // 滚动时检查
+            window.addEventListener('scroll', checkVisibility);
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initMouseTrail();
+            initNavbarScroll();
+            initTimelineAnimation();
+        });
+    </script>
+</body>
+</html>
