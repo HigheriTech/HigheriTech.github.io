@@ -3,1183 +3,720 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STAR HigheriTech</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #0078D7;
-            --primary-light: #e6f2fa;
-            --primary-dark: #005a9e;
-            --secondary: #00b7c3;
-            --dark: #1e293b;
-            --light: #ffffff;
-            --gray: #64748b;
-            --light-gray: #f1f5f9;
-            --dark-gray: #334155;
-            --border: #e2e8f0;
-            --card-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f9fc 0%, #e6f0f7 100%);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        /* 优化顶部导航栏 */
-        header {
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.7rem;
-            font-weight: 800;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .logo span {
-            color: var(--primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 35px;
-        }
-
-        .nav-links a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            position: relative;
-            padding: 6px 0;
-            font-size: 1.05rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a.active {
-            color: var(--primary);
-        }
-
-        /* 优化欢迎部分 - 横向撑满背景图并减小高度 */
-        .hero {
-            position: relative;
-            padding: 60px 0 30px; /* 减小内边距 */
-            text-align: center;
-            max-width: 100%; /* 横向撑满 */
-            margin: 0 auto;
-            z-index: 1;
-            min-height: 50vh; /* 减小高度 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center center; /* 居中显示 */
-            background-repeat: no-repeat;
-            margin-top: 30px;
-            margin-bottom: 60px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            border-radius: 0; /* 移除圆角 */
-            /* 添加底部阴影过渡效果 */
-            box-shadow: inset 0 -100px 100px -50px rgba(0, 0, 0, 0.4);
-        }
-
-        /* 添加半透明覆盖层确保文字可读性 */
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.25); /* 非常淡的黑色覆盖层 */
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px; /* 减小内边距 */
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.15); /* 非常淡的背景 */
-            backdrop-filter: blur(5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero h1 {
-            font-size: 3rem; /* 减小字体大小 */
-            margin-bottom: 20px;
-            line-height: 1.15;
-            font-weight: 800;
-            color: white; /* 白色文字 */
-            letter-spacing: -1px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* 文字阴影增强可读性 */
-        }
-
-        .hero p {
-            font-size: 1.1rem; /* 减小字体大小 */
-            color: white; /* 白色文字 */
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.7;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* 文字阴影增强可读性 */
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.2) 0%, rgba(255,255,255,0) 100%);
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px; /* 减小上边距 */
-        }
-
-        .btn {
-            padding: 16px 36px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            border: 3px solid transparent;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 10px 30px rgba(0, 120, 215, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 120, 215, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.25); /* 半透明白色背景 */
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(5px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: translateY(-5px) scale(1.05);
-        }
-
-        /* 优化项目卡片尺寸 */
-        .projects-section {
-            margin: 60px 0;
-            padding: 40px 0;
-            flex-grow: 1;
-        }
-
-        .section-title {
-            font-size: 2.4rem;
-            margin-bottom: 60px;
-            text-align: center;
-            position: relative;
-            font-weight: 800;
-            color: var(--dark);
-            letter-spacing: -0.5px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 5px;
-            background: var(--primary);
-            border-radius: 3px;
-        }
-
-        .projects-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-        }
-
-        .project-card {
-            background: var(--light);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-            box-shadow: var(--card-shadow);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
-        }
-
-        .project-img {
-            height: 220px;
-            width: 100%;
-            background: linear-gradient(45deg, var(--primary-light), #cfe7f8);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .project-img::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 120, 215, 0.1) 0%, rgba(0, 120, 215, 0.3) 100%);
-        }
-
-        .project-content {
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .project-title {
-            font-size: 1.7rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: 700;
-            color: var(--dark);
-            letter-spacing: -0.5px;
-        }
-
-        .project-title i {
-            color: var(--primary);
-            background: var(--primary-light);
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .project-desc {
-            color: var(--gray);
-            margin-bottom: 20px;
-            line-height: 1.7;
-            font-size: 1.05rem;
-            flex-grow: 1;
-        }
-
-        .project-features {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-
-        .project-features li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-left: 30px;
-            font-size: 0.95rem;
-        }
-
-        .project-features li:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 7px;
-            width: 18px;
-            height: 18px;
-            background: var(--primary-light);
-            border-radius: 50%;
-        }
-
-        .project-features li:after {
-            content: '✓';
-            position: absolute;
-            left: 4px;
-            top: 5px;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .tag {
-            background: var(--primary-light);
-            color: var(--primary);
-            font-size: 0.9rem;
-            padding: 7px 15px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: 2px solid rgba(0, 120, 215, 0.2);
-        }
-
-        .project-links {
-            display: flex;
-            gap: 12px;
-            margin-top: auto;
-        }
-
-        .project-links a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            border: 2px solid var(--primary);
-        }
-
-        .project-links a:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 120, 215, 0.25);
-        }
-
-        .project-links a i {
-            transition: var(--transition);
-        }
-
-        .project-links a:hover i {
-            transform: translateX(4px);
-        }
-
-        /* 增强版页脚 */
-        footer {
-            background: var(--dark-gray);
-            color: var(--light);
-            padding: 60px 0 30px;
-            border-top: 4px solid var(--primary);
-        }
-
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .footer-column {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .footer-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 12px;
-        }
-
-        .footer-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-logo span {
-            color: var(--primary);
-        }
-
-        .footer-desc {
-            color: var(--light-gray);
-            margin-bottom: 25px;
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .contact-icon {
-            color: var(--primary);
-            font-size: 1.1rem;
-            min-width: 20px;
-            padding-top: 4px;
-        }
-
-        .contact-text {
-            color: var(--light-gray);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .contact-text a {
-            color: var(--light-gray);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .contact-text a:hover {
-            color: var(--primary);
-        }
-
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-links a {
-            color: var(--light-gray);
-            text-decoration: none;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 0;
-            font-size: 0.95rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-            transform: translateX(4px);
-        }
-
-        .footer-links a i {
-            color: var(--primary);
-            transition: var(--transition);
-            font-size: 0.9rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--light);
-            font-size: 1.2rem;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-4px);
-        }
-
-        .newsletter-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .newsletter-form input {
-            padding: 14px 18px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-            font-size: 0.95rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .newsletter-form input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-
-        .newsletter-form input::placeholder {
-            color: var(--light-gray);
-        }
-
-        .newsletter-form button {
-            padding: 14px 18px;
-            border-radius: 10px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-
-        .newsletter-form button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding: 30px 0 15px;
-            margin-top: 50px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--light-gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .copyright a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1200px) {
-            .projects-container {
-                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    <title>STAR HigheriTech - 官方网站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        accent: '#722ED1',
+                        dark: '#1D2129',
+                        light: '#F2F3F5'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
             }
         }
-
-        @media (max-width: 900px) {
-            .hero h1 {
-                font-size: 2.8rem;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
             }
-            
-            .hero p {
-                font-size: 1.1rem;
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
-            
-            .project-img {
-                height: 200px;
+            .transition-custom {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            
-            .project-content {
-                padding: 25px;
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #165DFF 0%, #36CFC9 100%);
             }
-            
-            .project-title {
-                font-size: 1.6rem;
+            .project-card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
-            
-            .projects-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-container {
-                grid-template-columns: 1fr 1fr;
-                gap: 35px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding: 40px 0 20px; /* 移动端进一步减小内边距 */
-                min-height: 40vh; /* 移动端减小高度 */
-                margin-bottom: 40px;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero p {
-                font-size: 1.05rem;
-            }
-            
-            .hero-content {
-                padding: 20px;
-            }
-            
-            .nav-links {
-                gap: 15px;
-                font-size: 0.9rem;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .btn {
-                padding: 16px 30px;
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navbar {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .hero {
-                min-height: 40vh;
-                margin-top: 20px;
-                margin-bottom: 40px;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .project-img {
-                height: 180px;
-                font-size: 1.8rem;
-            }
-            
-            .project-content {
-                padding: 20px;
-            }
-            
-            .project-links {
-                flex-direction: column;
-            }
-            
-            .project-links a {
-                justify-content: center;
-            }
-            
-            .social-links a {
-                width: 38px;
-                height: 38px;
-                font-size: 1.1rem;
-            }
-            
-            .project-title i {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
-            
-            .footer-container {
-                grid-template-columns: 1fr;
+            .project-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
         }
     </style>
 </head>
-<body>
-    <!-- 优化顶部导航栏 -->
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <i class="fas fa-laptop-code"></i>
-                    STAR<span>HigheriTech</span>
+<body class="font-inter bg-light text-dark">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+                    <i class="fa fa- text-xl"></i>
                 </div>
-                <div class="nav-links">
-                    <a href="#" class="active">首页</a>
-                    <a href="#projects">项目</a>
-                    <a href="#skills">详情</a>
-                    <a href="#contact">联系</a>
-                </div>
+                <h1 class="ml-3 text-xl font-bold text-primary">STAR HigheriTech</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-dark hover:text-primary transition-custom font-medium">首页</a>
+                <a href="#projects" class="text-dark hover:text-primary transition-custom font-medium">项目</a>
+                <a href="#featured" class="text-dark hover:text-primary transition-custom font-medium">详情</a>
+                <a href="#about" class="text-dark hover:text-primary transition-custom font-medium">联系</a>
             </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#contact" class="hidden md:block bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-medium transition-custom shadow-lg hover:shadow-primary/20">
+                    联系我们
+                </a>
+                <button id="menu-toggle" class="md:hidden text-dark focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="#" class="text-dark hover:text-primary py-2 transition-custom font-medium">首页</a>
+                <a href="#projects" class="text-dark hover:text-primary py-2 transition-custom font-medium">项目</a>
+                <a href="#featured" class="text-dark hover:text-primary py-2 transition-custom font-medium">详情</a>
+                <a href="#about" class="text-dark hover:text-primary py-2 transition-custom font-medium">联系</a>
+                <a href="#contact" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-medium transition-custom text-center shadow-lg hover:shadow-primary/20">
+                    联系我们
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- 主要区域 -->
-    <main class="container">
-        <!-- 优化欢迎部分 - 横向撑满背景图并减小高度 -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1>STAR HigheriTech<span class="highlight">官方网站</span></h1>
-                <p>欢迎浏览STAR HigheriTech官方网站，这里有STAR HigheriTech工作室的一些软件项目。每个项目都会为您的计算机增添一丝光彩。</p>
-                <div class="cta-buttons">
-                    <a href="#projects" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i> 浏览项目
+    <!-- 头图区域 -->
+    <section class="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-dark mb-6">
+                        <span class="text-primary">STAR HigheriTech</span>
+                        <br>官方网站
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8 max-w-xl">
+                        欢迎浏览STAR HigheriTech官方网站，这里有STAR HigheriTech工作室的一些软件项目。每个项目都会为您的计算机增添一丝光彩。
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#projects" class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-medium transition-custom shadow-xl hover:shadow-primary/30 text-center">
+                            <i class="fa fa-rocket mr-2"></i> 浏览项目
+                        </a>
+                        <a href="#featured" class="bg-white hover:bg-gray-50 text-primary border border-primary px-8 py-4 rounded-full font-medium transition-custom shadow-lg hover:shadow-primary/10 text-center">
+                            <i class="fa fa-info-circle mr-2"></i> 关于信息
+                        </a>
+                    </div>
+                    <div class="mt-10 flex items-center space-x-6">
+                        <!-- <div class="flex -space-x-2">
+                            <img src="https://picsum.photos/seed/user1/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://picsum.photos/seed/user2/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://picsum.photos/seed/user3/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                        </div> -->
+                        <div>
+                            <div class="flex items-center">
+                                <div class="flex">
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                </div>
+                                <span class="ml-2 font-medium">5.0</span>
+                            </div>
+                            <p class="text-sm text-gray-500">旗舰产品</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="md:w-1/2 relative">
+                    <div class="relative z-10 rounded-xl overflow-hidden transform hover:scale-[1.02] transition-custom">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-white rounded-xl shadow-xl p-6 project-card">
+                                <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa fa-cogs text-primary text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">系统工具</h3>
+                                <p class="text-gray-600 mb-4">提供全面的系统维护和优化工具</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">装机必备</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">系统优化</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-xl p-6 project-card">
+                                <div class="w-16 h-16 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa fa-shield text-secondary text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">安全防护</h3>
+                                <p class="text-gray-600 mb-4">专业的系统安全与数据保护方案</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">数据加密</span>
+                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">漏洞修复</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-xl p-6 project-card">
+                                <div class="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa fa-cloud text-accent text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">云端部署</h3>
+                                <p class="text-gray-600 mb-4">支持云端部署的PE解决方案</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">远程控制</span>
+                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">自动更新</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-xl p-6 project-card">
+                                <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                                    <i class="fa fa-wrench text-primary text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">定制开发</h3>
+                                <p class="text-gray-600 mb-4">为企业定制专属的PE工具箱</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">企业版</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">定制化</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="absolute top-1/4 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                    <div class="absolute bottom-1/4 -left-8 w-40 h-40 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+<br><br><br>
+
+    <!-- 推荐项目区 -->
+    <section id="featured" class="py-20 bg-gradient-blue text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">旗舰项目</h2>
+                <p class="text-white/80 text-lg">我们最受欢迎和创新的解决方案</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl mb-16">
+                <div class="flex flex-col lg:flex-row">
+                    <div class="lg:w-1/2 p-8 lg:p-12">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">旗舰产品</span>
+                            <span class="ml-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">装机必备</span>
+                        </div>
+                        <h3 class="text-2xl lg:text-3xl font-bold mb-4">活力PE工具箱</h3>
+                        <p class="text-white/90 mb-6">
+                            功能强大的PE系统，支持市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span>附带IT天空精品EIX一键装机软件</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <span>Windows 11 内核</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt=1 mr=3"></i>
+                                <span>附带TODESK等主流远程控制软件</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-secondary mt=1 mr=3"></i>
+                                <span>经典设计+现代化设计的完美结合</span>
+                            </li>
+                        </ul>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="/VIEW/PE.html" target="_blank" class="bg-white text-primary px-8 py-4 rounded-full font-medium transition-custom shadow-xl hover:shadow-primary/30 text-center">
+                                <i class="fa fa-download mr-2"></i> 立即下载
+                            </a>
+                            <a href="/VIEW/PE.html" class="bg-transparent border border-white text-white px-8 py-4 rounded-full font-medium transition-custom hover:bg-white/10 text-center">
+                                <i class="fa fa-info-circle mr-2"></i> 了解更多
+                            </a>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 flex items-center justify-center p-8">
+                        <div class="relative">
+                            <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                                <img src="https://tc.z.wiki/autoupload/f/FZICfn1wsTnCLRF-TXCcXO2A6meMmIfwxPYQ11_oxvuyl5f0KlZfm6UsKj-HyTuv/20250728/WRgS/1154X868/lQLPKILMLKa4cJ3NA2TNBIKw8h-mcGFgg4sIY0rIxYqGAA_1154_868.png" alt="推荐项目截图" class="w-full h-auto">
+                            </div>
+                            <div class="absolute -top-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
+                            <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/20 rounded-full blur-2xl -z-10"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 推荐项目 1 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-home text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">活力起始页插件</h3>
+                    <p class="text-white/80 mb-6">最简洁的设计，包含壁纸、搜索引擎、快捷卡片等功能皆可自定义。</p>
+                    <a href="/tab/index.html" target="_blank" class="text-white font-medium flex items-center">
+                        在线体验 <i class="fa fa-arrow-right ml-2 text-sm"></i>
                     </a>
-                    <a href="#contact" class="btn btn-secondary">
-                        <i class="fas fa-paper-plane"></i> 关于信息
+                </div>
+
+                <!-- 推荐项目 2 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-tasks text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">活力多功能草稿记事本</h3>
+                    <p class="text-white/80 mb-6">电脑备忘录功能，让电脑工作尽然有序；电脑草稿本功能，让一切不再复杂。</p>
+                    <a href="/DRAFT/index.html" target="_blank" class="text-white font-medium flex items-center">
+                        在线体验 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- 推荐项目 3 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
+                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-shield text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">更多敬请期待</h3>
+                    <p class="text-white/80 mb-6">---</p>
+                    <a href="#" class="text-white font-medium flex items-center">
+                        即将推出 <i class="fa fa-arrow-right ml-2 text-sm"></i>
                     </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+    
+    
+    <!-- 项目展示区 -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">精选项目展示</h2>
+                <p class="text-gray-600 text-lg">探索我们的创新项目和解决方案</p>
+            </div>
 
-        <!-- 项目展示 - 6个卡片 -->
-        <section class="projects-section" id="projects">
-            <h2 class="section-title">精选项目展示</h2>
-            <div class="projects-container">
-                <!-- 项目卡片 1 -->
-                <div class="project-card">
-                    <div class="project-img">HigheriPE TOOLBOX</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-chart-line"></i> 活力PE工具箱
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-blue-600">HigheriPE TOOLBOX</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full">系统工具</span>
+                            <span class="ml-2 bg-secondary/10 text-secondary text-xs px-3 py-1 rounded-full">装机必备</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">
+                            <i class="fa fa-windows text-primary mr-2"></i> 活力PE工具箱
                         </h3>
-                        <p class="project-desc">
+                        <p class="text-gray-600 mb-6">
                             功能强大的PE系统，附带市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
                         </p>
                         
-                        <ul class="project-features">
-                            <li>附带IT天空精品EIX一键装机软件</li>
-                            <li>Windows 11 内核</li>
-                            <li>附带TODESK等主流远程控制软件</li>
-                            <li>经典设计+现代化设计的完美结合</li>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>附带IT天空精品EIX一键装机软件</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>Windows 11 内核</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>附带TODESK等主流远程控制软件</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>经典设计+现代化设计的完美结合</span>
+                            </li>
                         </ul>
                         
-                        <div class="project-tags">
-                            <span class="tag">Win 11</span>
-                            <span class="tag">ISO</span>
-                            <span class="tag">外置包可修改</span>
+                        <div class="project-tags flex flex-wrap gap-2 mb-6">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Win 11</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">ISO</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">外置包可修改</span>
                         </div>
                         
                         <div class="project-links">
-                            <a href="/VIEW/PE.html" target="_blank">
-                                <i class="fab fa-google-play"></i> 查看详情 / 下载
+                            <a href="/VIEW/PE.html" target="_blank" class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                                <i class="fa fa-eye mr-2"></i> 查看详情 / 下载
                             </a>
-                            <!-- <a href="#">
-                                <i class="fas fa-external-link-alt"></i> 演示 
-                            </a> -->
                         </div>
                     </div>
                 </div>
 
-                <!-- 项目卡片 2 -->
-                <div class="project-card">
-                    <div class="project-img">HigheriTab 2.0</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-home"></i> 活力起始页插件
+                <!-- 项目 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-purple-600">HigheriTab 2.0</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">浏览器插件</span>
+                            <span class="ml-2 bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">起始页</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">
+                            <i class="fa fa-home text-purple-600 mr-2"></i> 活力起始页插件
                         </h3>
-                        <p class="project-desc">
+                        <p class="text-gray-600 mb-6">
                             最简洁的设计，包含壁纸、搜索引擎、快捷卡片等功能皆可自定义
                         </p>
                         
-                        <ul class="project-features">
-                            <li>多种搜索引擎可切换</li>
-                            <li>美丽的界面与高斯模糊渲染界面</li>
-                            <li>高可自定义性</li>
-                            <li>多种实用功能</li>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>多种搜索引擎可切换</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>美丽的界面与高斯模糊渲染界面</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>高可自定义性</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>多种实用功能</span>
+                            </li>
                         </ul>
                         
-                        <div class="project-tags">
-                            <span class="tag">HTML</span>
-                            <span class="tag">CSS</span>
-                            <span class="tag">JS</span>
+                        <div class="project-tags flex flex-wrap gap-2 mb-6">
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">HTML</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">CSS</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">JS</span>
                         </div>
                         
-                        <div class="project-links">
-                            <a href="/dl/TC.crx" download target="_blank">
-                                <i class="fab fa-google-play"></i> 下载浏览器插件
+                        <div class="project-links flex flex-col gap-3">
+                            <a href="/dl/TC.crx" download target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                                <i class="fa fa-download mr-2"></i> 下载浏览器插件
                             </a>
-                             <a href="/tab/index.html" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> 在线体验
-                            </a> 
+                            <a href="/tab/index.html" target="_blank" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                                <i class="fa fa-external-link mr-2"></i> 在线体验
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- 项目卡片 3 -->
-                <div class="project-card">
-                    <div class="project-img">HigheriDraft 2.0</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-tasks"></i> 活力多功能草稿记事本
+                <!-- 项目 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-green-600">HigheriDraft 2.0</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">生产力工具</span>
+                            <span class="ml-2 bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">测试版</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">
+                            <i class="fa fa-tasks text-green-600 mr-2"></i> 活力多功能草稿记事本
                         </h3>
-                        <p class="project-desc">
+                        <p class="text-gray-600 mb-6">
                             电脑备忘录功能，让电脑工作尽然有序；电脑草稿本功能，让一切不再复杂。( 测试版 Build 25071 T )
                         </p>
                         
-                        <ul class="project-features">
-                            <li>备忘录功能</li>
-                            <li>草稿本功能</li>
-                            <li>手写功能</li>
-                            <li>线上保存</li>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>备忘录功能</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span>草稿本功能</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>手写功能</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <span>线上保存</span>
+                            </li>
                         </ul>
                         
-                        <div class="project-tags">
-                            <span class="tag">HTML</span>
-                            <span class="tag">JS</span>
-                            <span class="tag">CSS</span>
-                            <span class="tag">Electron</span>
+                        <div class="project-tags flex flex-wrap gap-2 mb-6">
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">HTML</span>
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">JS</span>
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">CSS</span>
+                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Electron</span>
                         </div>
                         
                         <div class="project-links">
-                            <a href="/DRAFT/index.html" target="_blank">
-                                <i class="fab fa-google-play"></i> 在线体验测试 ( Build 25071 T )
+                            <a href="/DRAFT/index.html" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                                <i class="fa fa-play-circle mr-2"></i> 在线体验测试 ( Build 25071 T )
                             </a>
-                           <!-- <a href="#">
-                                <i class="fab fa-google-play"></i> 下载
-                            </a> -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 项目卡片 4 
-                <div class="project-card">
-                    <div class="project-img">智能家居</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-home"></i> 智能家居控制中心
-                        </h3>
-                        <p class="project-desc">
-                            基于物联网的智能家居控制系统，支持设备联动和场景模式。
-                        </p>
-                        
-                        <ul class="project-features">
-                            <li>支持多种设备接入</li>
-                            <li>场景自动化设置</li>
-                            <li>能源消耗监控</li>
-                            <li>语音控制功能</li>
-                        </ul>
-                        
-                        <div class="project-tags">
-                            <span class="tag">物联网</span>
-                            <span class="tag">Python</span>
-                            <span class="tag">React</span>
-                        </div>
-                        
-                        <div class="project-links">
-                            <a href="#">
-                                <i class="fab fa-github"></i> 源代码
-                            </a>
-                            <a href="#">
-                                <i class="fas fa-external-link-alt"></i> 演示
-                            </a>
-                        </div>
-                    </div>
-                </div> -->
-                
-                <!-- 项目卡片 5 
-                <div class="project-card">
-                    <div class="project-img">AI健康助手</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-heartbeat"></i> AI健康助手
-                        </h3>
-                        <p class="project-desc">
-                            基于AI的健康监测系统，提供个性化健康建议和趋势预测。
-                        </p>
-                        
-                        <ul class="project-features">
-                            <li>健康数据实时监测</li>
-                            <li>个性化健康建议</li>
-                            <li>异常情况预警</li>
-                            <li>健康趋势预测</li>
-                        </ul>
-                        
-                        <div class="project-tags">
-                            <span class="tag">人工智能</span>
-                            <span class="tag">TensorFlow</span>
-                            <span class="tag">Flutter</span>
-                        </div>
-                        
-                        <div class="project-links">
-                            <a href="#">
-                                <i class="fab fa-github"></i> 源代码
-                            </a>
-                            <a href="#">
-                                <i class="fas fa-mobile-alt"></i> 应用
-                            </a>
-                        </div>
-                    </div>
-                </div> -->
-                
-                <!-- 项目卡片 6 
-                <div class="project-card">
-                    <div class="project-img">数字钱包</div>
-                    <div class="project-content">
-                        <h3 class="project-title">
-                            <i class="fas fa-wallet"></i> 区块链数字钱包
-                        </h3>
-                        <p class="project-desc">
-                            安全可靠的数字资产管理钱包，支持多链资产管理和交易。
-                        </p>
-                        
-                        <ul class="project-features">
-                            <li>支持主流数字货币</li>
-                            <li>冷热钱包分离架构</li>
-                            <li>跨链交易功能</li>
-                            <li>实时行情提醒</li>
-                        </ul>
-                        
-                        <div class="project-tags">
-                            <span class="tag">区块链</span>
-                            <span class="tag">以太坊</span>
-                            <span class="tag">智能合约</span>
-                        </div>
-                        
-                        <div class="project-links">
-                            <a href="#">
-                                <i class="fab fa-github"></i> 源代码
-                            </a>
-                            <a href="#">
-                                <i class="fas fa-coins"></i> 体验
-                            </a>
-                        </div>
-                    </div>
-                </div> -->
-            </div>
-        </section>
-    </main>
-
-    <!-- 增强版页脚 -->
-    <footer id="contact">
-        <div class="footer-container">
-            <!-- 关于我 -->
-            <div class="footer-column">
-                <div class="footer-logo">
-                    <i class="fas fa-laptop-code"></i> STAR<span>HigheriTech</span>
-                </div>
-                <p class="footer-desc">
-                    官方网站
-                </p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-bilibili"></i></a>
-                   <!-- <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-codepen"></i></a> -->
-                </div>
-            </div>
-
-            <!-- 联系信息 -->
-            <div class="footer-column">
-                <h3 class="footer-title">联系信息</h3>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <div class="contact-text">
-                            暂无<br>
-                            
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                        <div class="contact-text">
-                            <a href="tel:+8613812345678">暂无</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                        <div class="contact-text">
-                            <a href="mailto:contact@devportfolio.com">暂无</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 快速链接 -->
-            <div class="footer-column">
-                <h3 class="footer-title">快速链接</h3>
-                <div class="footer-links">
-                    <a href="#"><i class="fas fa-chevron-right"></i> 首页</a>
-                    <a href="#projects"><i class="fas fa-chevron-right"></i> 项目展示</a>
-                   <!-- <a href="#"><i class="fas fa-chevron-right"></i> 技术栈</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i> 关于我</a>
-                    <a href="#contact"><i class="fas fa-chevron-right"></i> 联系方式</a> -->
-                </div>
-            </div>
-
-            <!-- 订阅更新 -->
-            <div class="footer-column">
-                <h3 class="footer-title">订阅更新</h3>
-                <p class="footer-desc">
-                    订阅我们的新闻通讯，获取最新项目更新和技术文章。
-                </p>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="您的电子邮箱" required>
-                    <button type="submit">
-                        <i class="fas fa-paper-plane"></i> 订阅
-                    </button>
-                </form>
+            <div class="text-center mt-16">
+                <a href="#" class="inline-block bg-white hover:bg-gray-50 text-primary border border-primary px-8 py-4 rounded-full font-medium transition-custom shadow-lg hover:shadow-primary/10">
+                    <i class="fa fa-plus mr-2"></i> 敬请期待更多项目
+                </a>
             </div>
         </div>
+    </section>
 
-        <!-- 版权信息 -->
-        <div class="copyright">
-            <p>&copy; 2025 STAR HigheriTech 信息活力工作室官方网站. 保留所有权利</p>
-            <p>设计制作: <a href="#">STAR HigheriTech Office</a> | <a href="https://pages.github.com/" target="_blank">Powered by Github Pages</a> | <a href="#">没有隐私政策与使用条款</a></p>
+
+
+    <!-- 关于我们 -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-10 lg:mb-0">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-6">关于 STAR HigheriTech</h2>
+                    <p class="text-gray-600 mb-6">
+                        STAR HigheriTech 团队专注于开发和优化系统工具软件，为个人用户提供高效、稳定的系统维护解决方案。
+                    </p>
+                    <!-- <p class="text-gray-600 mb-8">
+                        我们的使命是通过技术创新，简化系统维护流程，让每一位用户都能轻松应对各种计算机问题。
+                    </p> -->
+                    <!-- <div class="grid grid-cols-2 gap-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fa fa-users text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">50,000+</div>
+                                <div class="text-gray-500">月活跃用户</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fa fa-download text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">1M+</div>
+                                <div class="text-gray-500">累计下载</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fa fa-code text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">120+</div>
+                                <div class="text-gray-500">集成工具</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fa fa-building text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">500+</div>
+                                <div class="text-gray-500">企业客户</div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="lg:w-1/2 relative">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-light rounded-xl p-6 shadow-lg">
+                            <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fa fa-lightbulb-o text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-dark">我们的愿景</h3>
+                            <p class="text-gray-600">持续创新，为您的电脑科技生活带来改变。</p>
+                        </div>
+                        <!-- <div class="bg-light rounded-xl p-6 shadow-lg mt-8">
+                            <div class="w-16 h-16 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fa fa-rocket text-secondary text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-dark">技术创新</h3>
+                            <p class="text-gray-600">持续投入研发，优化系统工具，提升用户体验和问题解决效率。</p>
+                        </div>
+                        <div class="bg-light rounded-xl p-6 shadow-lg">
+                            <div class="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fa fa-heart text-accent text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-dark">用户至上</h3>
+                            <p class="text-gray-600">以用户需求为核心，持续收集反馈，不断优化产品功能和用户体验。</p>
+                        </div>
+                        <div class="bg-light rounded-xl p-6 shadow-lg -mt-8">
+                            <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                                <i class="fa fa-globe text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-dark">服务理念</h3>
+                            <p class="text-gray-600">为用户提供本地化服务，解决系统维护难题。</p>
+                        </div>
+                    </div> -->
+                    <div class="absolute top-1/4 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-20 bg-light">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">联系我们</h2>
+                <p class="text-gray-600 text-lg">有任何问题或建议？请随时联系我们</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-dark">获取最新资讯</h3>
+                        <p class="text-gray-600 mb-8">订阅我们的通讯，获取最新项目更新、技术文章和特别优惠。</p>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2">电子邮箱</label>
+                            <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your@email.com">
+                        </div>
+                        
+                        <button class="w-full bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-custom">
+                            立即订阅
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-dark">发送消息</h3>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">姓名</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="您的姓名">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">邮箱</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your@email.com">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">主题</label>
+                            <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="消息主题">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2">消息</label>
+                            <textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" rows="4" placeholder="您的消息内容..."></textarea>
+                        </div>
+                        
+                        <button class="w-full bg-dark hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-custom">
+                            发送消息
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+                            <i class="fa fa-windows text-xl"></i>
+                        </div>
+                        <h2 class="ml-3 text-xl font-bold">STAR HigheriTech</h2>
+                    </div>
+                    <p class="text-gray-400 mb-6">官方网站</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-custom">
+                            <i class="fa fa-github"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-custom">
+                            <i class="fa fa-bilibili"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6">联系信息</h3>
+                    <div class="contact-info">
+                        <div class="flex items-start mb-4">
+                            <i class="fa fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">暂无</span>
+                        </div>
+                        <div class="flex items-start mb-4">
+                            <i class="fa fa-phone text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">暂无</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa fa-envelope text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-400">暂无</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6">快速链接</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">首页</a></li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-custom">项目展示</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-6">订阅更新</h3>
+                    <p class="text-gray-400 mb-6">
+                        订阅我们的新闻通讯，获取最新项目更新和技术文章。
+                    </p>
+                    <form class="flex flex-col sm:flex-row gap-3">
+                        <input type="email" placeholder="您的电子邮箱" class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        <button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-custom">
+                            订阅
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 STAR HigheriTech 信息活力工作室官方网站. 保留所有权利</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-custom">隐私政策</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-custom">使用条款</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script>
-        // 平滑滚动效果
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'shadow-md');
+                navbar.classList.remove('py-3', 'shadow-sm');
+            } else {
+                navbar.classList.add('py-3', 'shadow-sm');
+                navbar.classList.remove('py-2', 'shadow-md');
+            }
+        });
+
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
                     window.scrollTo({
-                        top: target.offsetTop - 70,
+                        top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
+                    
+                    // 关闭移动菜单（如果打开）
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
                 }
             });
-        });
-
-        // 项目卡片悬停效果增强
-        const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px)';
-                card.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.15)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0)';
-                card.style.boxShadow = 'var(--card-shadow)';
-            });
-        });
-
-        // 页面加载动画
-        window.addEventListener('load', () => {
-            const hero = document.querySelector('.hero-content');
-            hero.style.opacity = '0';
-            hero.style.transform = 'translateY(30px)';
-            hero.style.transition = 'opacity 1s ease, transform 1s ease';
-            
-            setTimeout(() => {
-                hero.style.opacity = '1';
-                hero.style.transform = 'translateY(0)';
-            }, 300);
-            
-            // 项目卡片动画
-            const cards = document.querySelectorAll('.project-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(40px)';
-                card.style.transition = `opacity 0.7s ease ${index * 0.15}s, transform 0.7s ease ${index * 0.15}s`;
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 400 + index * 200);
-            });
-        });
-        
-        // 表单提交
-        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input').value;
-            alert(`感谢订阅！我们将发送更新到: ${email}`);
-            this.reset();
         });
     </script>
 </body>
