@@ -1,9 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STAR HigheriTech - 官方网站</title>
+    <!-- 预连接到CDN以提升加载速度 -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://tc.z.wiki" crossorigin>
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" as="style">
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -45,6 +53,14 @@
                 transform: translateY(-8px);
                 box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
+            /* 懒加载图片的淡入效果 */
+            .lazy-image {
+                opacity: 0;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .lazy-image[src] {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -54,7 +70,7 @@
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
-                    <i class="fa fa- text-xl"></i>
+                    <i class="fa fa-star text-xl"></i>
                 </div>
                 <h1 class="ml-3 text-xl font-bold text-primary">STAR HigheriTech</h1>
             </div>
@@ -86,13 +102,14 @@
             </div>
         </div>
     </header>
-
+    
     <!-- 头图区域 -->
-    <section class="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5">
+    <section class="pt-32 pb-20 bg-gradient-to-br from-primary/5 to-secondary/5"><br>
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-10 md:mb-0">
                     <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-dark mb-6">
+                    
                         <span class="text-primary">STAR HigheriTech</span>
                         <br>官方网站
                     </h1>
@@ -108,11 +125,6 @@
                         </a>
                     </div>
                     <div class="mt-10 flex items-center space-x-6">
-                        <!-- <div class="flex -space-x-2">
-                            <img src="https://picsum.photos/seed/user1/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
-                            <img src="https://picsum.photos/seed/user2/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
-                            <img src="https://picsum.photos/seed/user3/40/40" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
-                        </div> -->
                         <div>
                             <div class="flex items-center">
                                 <div class="flex">
@@ -128,116 +140,117 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="md:w-1/2 relative">
+                <div class="md:w-1/2 relative">
                     <div class="relative z-10 rounded-xl overflow-hidden transform hover:scale-[1.02] transition-custom">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-white rounded-xl shadow-xl p-6 project-card">
                                 <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                                     <i class="fa fa-cogs text-primary text-2xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">系统工具</h3>
-                                <p class="text-gray-600 mb-4">提供全面的系统维护和优化工具</p>
+                                <h3 class="text-xl font-bold mb-2">HigheriPE</h3>
+                                <p class="text-gray-600 mb-4">提供全面的系统维护和装机工具</p>
                                 <div class="flex flex-wrap gap-2">
-                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">装机必备</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">一键装机</span>
                                     <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">系统优化</span>
                                 </div>
                             </div>
                             <div class="bg-white rounded-xl shadow-xl p-6 project-card">
                                 <div class="w-16 h-16 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
-                                    <i class="fa fa-shield text-secondary text-2xl"></i>
+                                    <i class="fa fa-tasks text-secondary text-2xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">安全防护</h3>
-                                <p class="text-gray-600 mb-4">专业的系统安全与数据保护方案</p>
+                                <h3 class="text-xl font-bold mb-2">HigheriDraft</h3>
+                                <p class="text-gray-600 mb-4">备忘录和草稿本，让工作轻松有序</p>
                                 <div class="flex flex-wrap gap-2">
-                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">数据加密</span>
-                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">漏洞修复</span>
+                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">多种功能</span>
+                                    <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded">线上保存</span>
                                 </div>
                             </div>
                             <div class="bg-white rounded-xl shadow-xl p-6 project-card">
                                 <div class="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
-                                    <i class="fa fa-cloud text-accent text-2xl"></i>
+                                    <i class="fa fa-home text-accent text-2xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">云端部署</h3>
-                                <p class="text-gray-600 mb-4">支持云端部署的PE解决方案</p>
+                                <h3 class="text-xl font-bold mb-2">HigheriTab</h3>
+                                <p class="text-gray-600 mb-4">最简洁的设计，各功能皆可自定义</p>
                                 <div class="flex flex-wrap gap-2">
-                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">远程控制</span>
-                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">自动更新</span>
+                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">简洁美观</span>
+                                    <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded">可自定义</span>
                                 </div>
                             </div>
                             <div class="bg-white rounded-xl shadow-xl p-6 project-card">
                                 <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                                     <i class="fa fa-wrench text-primary text-2xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">定制开发</h3>
-                                <p class="text-gray-600 mb-4">为企业定制专属的PE工具箱</p>
+                                <h3 class="text-xl font-bold mb-2">持续开发</h3>
+                                <p class="text-gray-600 mb-4">更多新产品持续开发中...</p>
                                 <div class="flex flex-wrap gap-2">
-                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">企业版</span>
-                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">定制化</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">持续维护</span>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded">持续创新</span>
                                 </div>
                             </div>
                         </div>
                     </div> -->
-                    <div class="absolute top-1/4 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
-                    <div class="absolute bottom-1/4 -left-8 w-40 h-40 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
-                </div>
+                <div class="absolute top-1/4 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                <div class="absolute bottom-1/4 -left-8 w-40 h-40 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
             </div>
         </div>
+        <br>
     </section>
-<br><br><br>
 
-    <!-- 推荐项目区 -->
-    <section id="featured" class="py-20 bg-gradient-blue text-white">
+
+
+    <!-- 推荐项目区（现在使用纯白背景） -->
+    <section id="featured" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">旗舰项目</h2>
-                <p class="text-white/80 text-lg">我们最受欢迎和创新的解决方案</p>
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">旗舰项目</h2>
+                <p class="text-gray-600 text-lg">我们最受欢迎和创新的解决方案</p>
             </div>
 
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl mb-16">
+            <div class="bg-light rounded-2xl overflow-hidden shadow-2xl mb-16">
                 <div class="flex flex-col lg:flex-row">
                     <div class="lg:w-1/2 p-8 lg:p-12">
                         <div class="flex items-center mb-6">
-                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">旗舰产品</span>
-                            <span class="ml-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">装机必备</span>
+                            <span class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full">旗舰产品</span>
+                            <span class="ml-2 bg-primary/10 text-primary text-xs px-3 py-1 rounded-full">装机必备</span>
                         </div>
-                        <h3 class="text-2xl lg:text-3xl font-bold mb-4">活力PE工具箱</h3>
-                        <p class="text-white/90 mb-6">
+                        <h3 class="text-2xl lg:text-3xl font-bold text-dark mb-4">活力PE工具箱</h3>
+                        <p class="text-gray-600 mb-6">
                             功能强大的PE系统，支持市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
                         </p>
                         <ul class="space-y-3 mb-8">
                             <li class="flex items-start">
-                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
                                 <span>附带IT天空精品EIX一键装机软件</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check-circle text-secondary mt-1 mr-3"></i>
+                                <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
                                 <span>Windows 11 内核</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check-circle text-secondary mt=1 mr=3"></i>
+                                <i class="fa fa-check-circle text-primary mt=1 mr=3"></i>
                                 <span>附带TODESK等主流远程控制软件</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check-circle text-secondary mt=1 mr=3"></i>
+                                <i class="fa fa-check-circle text-primary mt=1 mr=3"></i>
                                 <span>经典设计+现代化设计的完美结合</span>
                             </li>
                         </ul>
                         <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                            <a href="/VIEW/PE.html" target="_blank" class="bg-white text-primary px-8 py-4 rounded-full font-medium transition-custom shadow-xl hover:shadow-primary/30 text-center">
+                            <a href="/VIEW/PE.html" target="_blank" class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-medium transition-custom shadow-xl hover:shadow-primary/30 text-center">
                                 <i class="fa fa-download mr-2"></i> 立即下载
                             </a>
-                            <a href="/VIEW/PE.html" class="bg-transparent border border-white text-white px-8 py-4 rounded-full font-medium transition-custom hover:bg-white/10 text-center">
+                            <a href="/VIEW/PE.html" class="bg-white border border-primary text-primary px-8 py-4 rounded-full font-medium transition-custom hover:bg-gray-50 text-center">
                                 <i class="fa fa-info-circle mr-2"></i> 了解更多
                             </a>
                         </div>
                     </div>
                     <div class="lg:w-1/2 flex items-center justify-center p-8">
                         <div class="relative">
-                            <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-                                <img src="https://tc.z.wiki/autoupload/f/FZICfn1wsTnCLRF-TXCcXO2A6meMmIfwxPYQ11_oxvuyl5f0KlZfm6UsKj-HyTuv/20250728/WRgS/1154X868/lQLPKILMLKa4cJ3NA2TNBIKw8h-mcGFgg4sIY0rIxYqGAA_1154_868.png" alt="推荐项目截图" class="w-full h-auto">
+                            <div class="relative z-10 bg-light border border-gray-200 rounded-2xl shadow-2xl overflow-hidden">
+                                <img src="https://tc.z.wiki/autoupload/f/FZICfn1wsTnCLRF-TXCcXO2A6meMmIfwxPYQ11_oxvuyl5f0KlZfm6UsKj-HyTuv/20250728/WRgS/1154X868/lQLPKILMLKa4cJ3NA2TNBIKw8h-mcGFgg4sIY0rIxYqGAA_1154_868.png" alt="推荐项目截图" class="w-full h-auto lazy-image" loading="lazy" data-src="https://tc.z.wiki/autoupload/f/FZICfn1wsTnCLRF-TXCcXO2A6meMmIfwxPYQ11_oxvuyl5f0KlZfm6UsKj-HyTuv/20250728/WRgS/1154X868/lQLPKILMLKa4cJ3NA2TNBIKw8h-mcGFgg4sIY0rIxYqGAA_1154_868.png">
                             </div>
-                            <div class="absolute -top-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
-                            <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/20 rounded-full blur-2xl -z-10"></div>
+                            <div class="absolute -top-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                            <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
                         </div>
                     </div>
                 </div>
@@ -245,37 +258,37 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- 推荐项目 1 -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
-                        <i class="fa fa-home text-2xl text-secondary"></i>
+                <div class="bg-light rounded-xl p-8 hover:bg-gray-50 transition-custom border border-gray-100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-home text-2xl text-primary"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">活力起始页插件</h3>
-                    <p class="text-white/80 mb-6">最简洁的设计，包含壁纸、搜索引擎、快捷卡片等功能皆可自定义。</p>
-                    <a href="/tab/index.html" target="_blank" class="text-white font-medium flex items-center">
+                    <h3 class="text-xl font-bold mb-3 text-dark">活力起始页插件</h3>
+                    <p class="text-gray-600 mb-6">最简洁的设计，包含壁纸、搜索引擎、快捷卡片等功能皆可自定义。</p>
+                    <a href="/tab/index.html" target="_blank" class="text-primary font-medium flex items-center">
                         在线体验 <i class="fa fa-arrow-right ml-2 text-sm"></i>
                     </a>
                 </div>
 
                 <!-- 推荐项目 2 -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                <div class="bg-light rounded-xl p-8 hover:bg-gray-50 transition-custom border border-gray-100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
                         <i class="fa fa-tasks text-2xl text-primary"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">活力多功能草稿记事本</h3>
-                    <p class="text-white/80 mb-6">电脑备忘录功能，让电脑工作尽然有序；电脑草稿本功能，让一切不再复杂。</p>
-                    <a href="/DRAFT/index.html" target="_blank" class="text-white font-medium flex items-center">
+                    <h3 class="text-xl font-bold mb-3 text-dark">活力多功能草稿记事本</h3>
+                    <p class="text-gray-600 mb-6">电脑备忘录功能，让电脑工作尽然有序；电脑草稿本功能，让一切不再复杂。</p>
+                    <a href="/DRAFT/index.html" target="_blank" class="text-primary font-medium flex items-center">
                         在线体验 <i class="fa fa-arrow-right ml-2 text-sm"></i>
                     </a>
                 </div>
 
                 <!-- 推荐项目 3 -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/20 transition-custom">
-                    <div class="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6">
-                        <i class="fa fa-shield text-2xl text-accent"></i>
+                <div class="bg-light rounded-xl p-8 hover:bg-gray-50 transition-custom border border-gray-100">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                        <i class="fa fa-shield text-2xl text-primary"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">更多敬请期待</h3>
-                    <p class="text-white/80 mb-6">---</p>
-                    <a href="#" class="text-white font-medium flex items-center">
+                    <h3 class="text-xl font-bold mb-3 text-dark">更多敬请期待</h3>
+                    <p class="text-gray-600 mb-6">---</p>
+                    <a href="#" class="text-primary font-medium flex items-center">
                         即将推出 <i class="fa fa-arrow-right ml-2 text-sm"></i>
                     </a>
                 </div>
@@ -283,60 +296,59 @@
         </div>
     </section>
     
-    
-    <!-- 项目展示区 -->
-    <section id="projects" class="py-20 bg-white">
+        <!-- 项目展示区（现在使用蓝绿渐变背景） -->
+    <section id="projects" class="py-20 bg-gradient-blue text-white">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">精选项目展示</h2>
-                <p class="text-gray-600 text-lg">探索我们的创新项目和解决方案</p>
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">精选项目展示</h2>
+                <p class="text-white/80 text-lg">探索我们的创新项目和解决方案</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- 项目 1 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
-                    <div class="h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                        <h3 class="text-2xl font-bold text-blue-600">HigheriPE TOOLBOX</h3>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-white/20">
+                    <div class="h-48 overflow-hidden flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-white">HigheriPE TOOLBOX</h3>
                     </div>
                     <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <span class="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full">系统工具</span>
-                            <span class="ml-2 bg-secondary/10 text-secondary text-xs px-3 py-1 rounded-full">装机必备</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">系统工具</span>
+                            <span class="ml-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">装机必备</span>
                         </div>
-                        <h3 class="text-xl font-bold mb-3 text-dark">
-                            <i class="fa fa-windows text-primary mr-2"></i> 活力PE工具箱
+                        <h3 class="text-xl font-bold mb-3 text-white">
+                            <i class="fa fa-windows text-white mr-2"></i> 活力PE工具箱
                         </h3>
-                        <p class="text-gray-600 mb-6">
+                        <p class="text-white/90 mb-6">
                             功能强大的PE系统，附带市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
                         </p>
                         
                         <ul class="space-y-2 mb-6">
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>附带IT天空精品EIX一键装机软件</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>Windows 11 内核</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>附带TODESK等主流远程控制软件</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>经典设计+现代化设计的完美结合</span>
                             </li>
                         </ul>
                         
                         <div class="project-tags flex flex-wrap gap-2 mb-6">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Win 11</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">ISO</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">外置包可修改</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">Win 11</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">ISO</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">外置包可修改</span>
                         </div>
                         
                         <div class="project-links">
-                            <a href="/VIEW/PE.html" target="_blank" class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                            <a href="/VIEW/PE.html" target="_blank" class="bg-white text-primary px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center hover:bg-gray-100">
                                 <i class="fa fa-eye mr-2"></i> 查看详情 / 下载
                             </a>
                         </div>
@@ -344,52 +356,52 @@
                 </div>
 
                 <!-- 项目 2 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
-                    <div class="h-48 overflow-hidden bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
-                        <h3 class="text-2xl font-bold text-purple-600">HigheriTab 2.0</h3>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-white/20">
+                    <div class="h-48 overflow-hidden flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-white">HigheriTab 2.0</h3>
                     </div>
                     <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">浏览器插件</span>
-                            <span class="ml-2 bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">起始页</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">浏览器插件</span>
+                            <span class="ml-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">起始页</span>
                         </div>
-                        <h3 class="text-xl font-bold mb-3 text-dark">
-                            <i class="fa fa-home text-purple-600 mr-2"></i> 活力起始页插件
+                        <h3 class="text-xl font-bold mb-3 text-white">
+                            <i class="fa fa-home text-white mr-2"></i> 活力起始页插件
                         </h3>
-                        <p class="text-gray-600 mb-6">
+                        <p class="text-white/90 mb-6">
                             最简洁的设计，包含壁纸、搜索引擎、快捷卡片等功能皆可自定义
                         </p>
                         
                         <ul class="space-y-2 mb-6">
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>多种搜索引擎可切换</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>美丽的界面与高斯模糊渲染界面</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>高可自定义性</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>多种实用功能</span>
                             </li>
                         </ul>
                         
                         <div class="project-tags flex flex-wrap gap-2 mb-6">
-                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">HTML</span>
-                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">CSS</span>
-                            <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">JS</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">HTML</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">CSS</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">JS</span>
                         </div>
                         
                         <div class="project-links flex flex-col gap-3">
-                            <a href="/dl/TC.crx" download target="_blank" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                            <a href="/dl/TC.crx" download target="_blank" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center hover:bg-gray-100">
                                 <i class="fa fa-download mr-2"></i> 下载浏览器插件
                             </a>
-                            <a href="/tab/index.html" target="_blank" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                            <a href="/tab/index.html" target="_blank" class="bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center hover:bg-white/30">
                                 <i class="fa fa-external-link mr-2"></i> 在线体验
                             </a>
                         </div>
@@ -397,50 +409,50 @@
                 </div>
 
                 <!-- 项目 3 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-gray-100">
-                    <div class="h-48 overflow-hidden bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center">
-                        <h3 class="text-2xl font-bold text-green-600">HigheriDraft 2.0</h3>
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-custom project-card border border-white/20">
+                    <div class="h-48 overflow-hidden flex items-center justify-center">
+                        <h3 class="text-2xl font-bold text-white">HigheriDraft 2.0</h3>
                     </div>
                     <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">生产力工具</span>
-                            <span class="ml-2 bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">测试版</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">生产力工具</span>
+                            <span class="ml-2 bg-white/20 text-white text-xs px-3 py-1 rounded-full">测试版</span>
                         </div>
-                        <h3 class="text-xl font-bold mb-3 text-dark">
-                            <i class="fa fa-tasks text-green-600 mr-2"></i> 活力多功能草稿记事本
+                        <h3 class="text-xl font-bold mb-3 text-white">
+                            <i class="fa fa-tasks text-white mr-2"></i> 活力多功能草稿记事本
                         </h3>
-                        <p class="text-gray-600 mb-6">
+                        <p class="text-white/90 mb-6">
                             电脑备忘录功能，让电脑工作尽然有序；电脑草稿本功能，让一切不再复杂。( 测试版 Build 25071 T )
                         </p>
                         
                         <ul class="space-y-2 mb-6">
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>备忘录功能</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <i class="fa fa-check text-green-300 mt-1 mr-2"></i>
                                 <span>草稿本功能</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>手写功能</span>
                             </li>
                             <li class="flex items-start">
-                                <i class="fa fa-check text-green-500 mt=1 mr=2"></i>
+                                <i class="fa fa-check text-green-300 mt=1 mr=2"></i>
                                 <span>线上保存</span>
                             </li>
                         </ul>
                         
                         <div class="project-tags flex flex-wrap gap-2 mb-6">
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">HTML</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">JS</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">CSS</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Electron</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">HTML</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">JS</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">CSS</span>
+                            <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">Electron</span>
                         </div>
                         
                         <div class="project-links">
-                            <a href="/DRAFT/index.html" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center">
+                            <a href="/DRAFT/index.html" target="_blank" class="bg-white text-green-600 px-6 py-3 rounded-lg font-medium transition-custom flex items-center justify-center hover:bg-gray-100">
                                 <i class="fa fa-play-circle mr-2"></i> 在线体验测试 ( Build 25071 T )
                             </a>
                         </div>
@@ -449,17 +461,15 @@
             </div>
 
             <div class="text-center mt-16">
-                <a href="#" class="inline-block bg-white hover:bg-gray-50 text-primary border border-primary px-8 py-4 rounded-full font-medium transition-custom shadow-lg hover:shadow-primary/10">
+                <a href="#" class="inline-block bg-white/20 backdrop-blur-sm text-white border border-white/30 px-8 py-4 rounded-full font-medium transition-custom shadow-lg hover:bg-white/30 hover:shadow-white/10">
                     <i class="fa fa-plus mr-2"></i> 敬请期待更多项目
                 </a>
             </div>
         </div>
     </section>
 
-
-
     <!-- 关于我们 -->
-    <section id="about" class="py-20 bg-white">
+    <section id="about" class="py-20 bg-light">
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row items-center">
                 <div class="lg:w-1/2 mb-10 lg:mb-0">
@@ -467,94 +477,33 @@
                     <p class="text-gray-600 mb-6">
                         STAR HigheriTech 团队专注于开发和优化系统工具软件，为个人用户提供高效、稳定的系统维护解决方案。
                     </p>
-                    <!-- <p class="text-gray-600 mb-8">
-                        我们的使命是通过技术创新，简化系统维护流程，让每一位用户都能轻松应对各种计算机问题。
-                    </p> -->
-                    <!-- <div class="grid grid-cols-2 gap-6">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fa fa-users text-primary"></i>
-                            </div>
-                            <div>
-                                <div class="text-2xl font-bold text-dark">50,000+</div>
-                                <div class="text-gray-500">月活跃用户</div>
-                            </div>
+                    <div class="bg-white rounded-xl p-6 shadow-lg mt-8">
+                        <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                            <i class="fa fa-lightbulb-o text-primary text-2xl"></i>
                         </div>
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fa fa-download text-primary"></i>
-                            </div>
-                            <div>
-                                <div class="text-2xl font-bold text-dark">1M+</div>
-                                <div class="text-gray-500">累计下载</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fa fa-code text-primary"></i>
-                            </div>
-                            <div>
-                                <div class="text-2xl font-bold text-dark">120+</div>
-                                <div class="text-gray-500">集成工具</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fa fa-building text-primary"></i>
-                            </div>
-                            <div>
-                                <div class="text-2xl font-bold text-dark">500+</div>
-                                <div class="text-gray-500">企业客户</div>
-                            </div>
-                        </div> -->
+                        <h3 class="text-xl font-bold mb-3 text-dark">我们的愿景</h3>
+                        <p class="text-gray-600">持续创新，为您的电脑科技生活带来改变。</p>
                     </div>
                 </div>
                 <div class="lg:w-1/2 relative">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-light rounded-xl p-6 shadow-lg">
-                            <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                                <i class="fa fa-lightbulb-o text-primary text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3 text-dark">我们的愿景</h3>
-                            <p class="text-gray-600">持续创新，为您的电脑科技生活带来改变。</p>
-                        </div>
-                        <!-- <div class="bg-light rounded-xl p-6 shadow-lg mt-8">
-                            <div class="w-16 h-16 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
-                                <i class="fa fa-rocket text-secondary text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3 text-dark">技术创新</h3>
-                            <p class="text-gray-600">持续投入研发，优化系统工具，提升用户体验和问题解决效率。</p>
-                        </div>
-                        <div class="bg-light rounded-xl p-6 shadow-lg">
-                            <div class="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
-                                <i class="fa fa-heart text-accent text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3 text-dark">用户至上</h3>
-                            <p class="text-gray-600">以用户需求为核心，持续收集反馈，不断优化产品功能和用户体验。</p>
-                        </div>
-                        <div class="bg-light rounded-xl p-6 shadow-lg -mt-8">
-                            <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-                                <i class="fa fa-globe text-primary text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3 text-dark">服务理念</h3>
-                            <p class="text-gray-600">为用户提供本地化服务，解决系统维护难题。</p>
-                        </div>
-                    </div> -->
-                    <div class="absolute top-1/4 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                    <div class="relative">
+
+                        <div class="absolute -top-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-2xl -z-10"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 联系我们 -->
-    <section id="contact" class="py-20 bg-light">
+    <section id="contact" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-dark mb-4">联系我们</h2>
                 <p class="text-gray-600 text-lg">有任何问题或建议？请随时联系我们</p>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-4xl mx-auto">
+            <div class="bg-light rounded-2xl shadow-xl p-8 md:p-12 max-w-4xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div>
                         <h3 class="text-xl font-bold mb-6 text-dark">获取最新资讯</h3>
@@ -717,6 +666,73 @@
                     }
                 }
             });
+        });
+
+        // 使用Intersection Observer API实现图片懒加载
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有带有lazy-image类的图片
+            const lazyImages = document.querySelectorAll('.lazy-image');
+            
+            // 如果浏览器支持Intersection Observer
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        // 当图片进入视口
+                        if (entry.isIntersecting) {
+                            const image = entry.target;
+                            // 如果图片有data-src属性
+                            if (image.dataset.src) {
+                                // 将data-src的值赋给src
+                                image.src = image.dataset.src;
+                                // 加载后移除lazy-image类
+                                image.classList.remove('lazy-image');
+                                // 停止监视这个图片
+                                imageObserver.unobserve(image);
+                            }
+                        }
+                    });
+                }, {
+                    // 图片一进入视口就开始加载
+                    rootMargin: '0px 0px 50px 0px',
+                    threshold: 0.01
+                });
+                
+                // 对每个lazy-image类的图片进行监视
+                lazyImages.forEach(function(image) {
+                    imageObserver.observe(image);
+                });
+            } else {
+                // 如果浏览器不支持Intersection Observer，则使用传统的懒加载方法
+                let lazyImageTimeout;
+                
+                function lazyLoad() {
+                    if (lazyImageTimeout) {
+                        clearTimeout(lazyImageTimeout);
+                    }
+                    
+                    lazyImageTimeout = setTimeout(function() {
+                        const scrollTop = window.pageYOffset;
+                        lazyImages.forEach(function(img) {
+                            if (img.offsetTop < (window.innerHeight + scrollTop)) {
+                                if (img.dataset.src) {
+                                    img.src = img.dataset.src;
+                                    img.classList.remove('lazy-image');
+                                }
+                            }
+                        });
+                        if (lazyImages.length == 0) { 
+                            document.removeEventListener('scroll', lazyLoad);
+                            window.removeEventListener('resize', lazyLoad);
+                            window.removeEventListener('orientationChange', lazyLoad);
+                        }
+                    }, 20);
+                }
+                
+                document.addEventListener('scroll', lazyLoad);
+                window.addEventListener('resize', lazyLoad);
+                window.addEventListener('orientationChange', lazyLoad);
+                lazyLoad();
+            }
         });
     </script>
 </body>
