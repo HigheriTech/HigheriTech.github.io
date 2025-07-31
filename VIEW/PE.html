@@ -14,48 +14,10 @@
     <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#165DFF',
-                        secondary: '#36CFC9',
-                        accent: '#722ED1',
-                        dark: '#1D2129',
-                        light: '#F2F3F5'
-                    },
-                    fontFamily: {
-                        inter: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
+    <script
+      src="./script.js">
     </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .transition-custom {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .bg-gradient-blue {
-                background: linear-gradient(135deg, #165DFF 0%, #36CFC9 100%);
-            }
-            /* 懒加载图片的淡入效果 */
-            .lazy-image {
-                opacity: 0;
-                transition: opacity 0.3s ease-in-out;
-            }
-            .lazy-image[src] {
-                opacity: 1;
-            }
-        }
-    </style>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body class="font-inter bg-white text-dark">
     <!-- 导航栏 -->
@@ -442,57 +404,45 @@
     </footer>
 
     <script>
-        // 导航栏滚动效果
+        // 导航栏滚动效果 - 使用三元运算符简化
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('py-2', 'shadow-md');
-                navbar.classList.remove('py-3', 'shadow-sm');
-            } else {
-                navbar.classList.add('py-3', 'shadow-sm');
-                navbar.classList.remove('py-2', 'shadow-md');
-            }
+            window.scrollY > 50
+                ? navbar.classList.add('py-2', 'shadow-md')
+                : navbar.classList.remove('py-2', 'shadow-md');
         });
 
-        // 移动端菜单切换
+        // 移动端菜单切换 - 使用箭头函数简化
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-        // FAQ 切换效果
+        // FAQ 切换效果 - 使用更简洁的语法
         const faqToggles = document.querySelectorAll('.faq-toggle');
         faqToggles.forEach(toggle => {
             toggle.addEventListener('click', () => {
                 const content = toggle.nextElementSibling;
                 const icon = toggle.querySelector('i');
                 
-                // 关闭其他所有FAQ
+                // 关闭其他FAQ
                 document.querySelectorAll('.faq-content').forEach(item => {
                     if (item !== content) {
                         item.classList.add('hidden');
-                        const otherIcon = item.previousElementSibling.querySelector('i');
-                        otherIcon.style.transform = 'rotate(0deg)';
+                        item.previousElementSibling.querySelector('i').style.transform = 'rotate(0deg)';
                     }
                 });
                 
                 // 切换当前FAQ
-                content.classList.toggle('hidden');
-                if (!content.classList.contains('hidden')) {
-                    icon.style.transform = 'rotate(180deg)';
-                } else {
-                    icon.style.transform = 'rotate(0deg)';
-                }
+                const isHidden = content.classList.toggle('hidden');
+                icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
             });
         });
 
-        // 平滑滚动
+        // 平滑滚动 - 使用箭头函数简化
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', e => {
                 e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
+                const targetId = anchor.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
                 
                 if (targetElement) {
@@ -501,7 +451,7 @@
                         behavior: 'smooth'
                     });
                     
-                    // 关闭移动菜单（如果打开）
+                    // 关闭移动菜单
                     if (!mobileMenu.classList.contains('hidden')) {
                         mobileMenu.classList.add('hidden');
                     }
@@ -509,74 +459,36 @@
             });
         });
 
-        // 图片懒加载功能
-        document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有带有data-src属性的懒加载图片
+        // 图片懒加载功能 - 使用IntersectionObserver简化
+        document.addEventListener('DOMContentLoaded', () => {
             const lazyImages = document.querySelectorAll('img.lazy-image[data-src]');
             
-            // 检查浏览器是否支持Intersection Observer API
             if ('IntersectionObserver' in window) {
-                // 创建一个新的Intersection Observer实例
-                const imageObserver = new IntersectionObserver(function(entries, observer) {
-                    // 遍历所有观察到的元素
-                    entries.forEach(function(entry) {
-                        // 如果元素进入视口
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            const image = entry.target;
-                            // 将data-src的值赋给src属性
-                            image.src = image.dataset.src;
-                            // 图片加载完成后移除lazy-image类
-                            image.onload = function() {
-                                image.classList.remove('lazy-image');
-                            };
-                            // 停止观察这个元素
-                            imageObserver.unobserve(image);
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.onload = () => img.classList.remove('lazy-image');
+                            obs.unobserve(img);
                         }
                     });
-                });
+                }, {rootMargin: '0px 0px 50px 0px'});
                 
-                // 开始观察所有懒加载图片
-                lazyImages.forEach(function(image) {
-                    imageObserver.observe(image);
-                });
+                lazyImages.forEach(img => observer.observe(img));
             } else {
-                // 对于不支持Intersection Observer API的浏览器，使用滚动事件作为回退方案
-                let lazyImagePositions = [];
-                let loaded = 0;
-                
-                // 获取所有懒加载图片的位置
-                lazyImages.forEach(function(image) {
-                    lazyImagePositions.push({
-                        element: image,
-                        top: image.getBoundingClientRect().top + window.pageYOffset
-                    });
-                });
-                
-                // 处理滚动事件
-                function lazyLoad() {
-                    loaded = 0;
-                    
-                    lazyImagePositions.forEach(function(obj) {
-                        // 如果图片已经进入视口
-                        if (obj.top <= window.pageYOffset + window.innerHeight) {
-                            obj.element.src = obj.element.dataset.src;
-                            obj.element.onload = function() {
-                                obj.element.classList.remove('lazy-image');
-                            };
-                            loaded++;
+                // 回退方案：滚动时加载
+                const lazyLoad = () => {
+                    lazyImages.forEach(img => {
+                        if (img.getBoundingClientRect().top <= window.innerHeight + 100) {
+                            img.src = img.dataset.src;
+                            img.onload = () => img.classList.remove('lazy-image');
                         }
                     });
-                    
-                    // 如果所有图片都已加载，移除滚动事件监听器
-                    if (loaded === lazyImages.length) {
-                        window.removeEventListener('scroll', lazyLoad);
-                    }
-                }
+                };
                 
-                // 添加滚动事件监听器
                 window.addEventListener('scroll', lazyLoad);
-                // 初始加载
-                lazyLoad();
+                lazyLoad(); // 初始加载
             }
         });
     </script>
