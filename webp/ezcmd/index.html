@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higheri EasyCMD - 可视化CMD指令生成工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        /* 左侧积木库 */
+        .blocks-panel {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .blocks-panel h3 {
+            color: #4a90e2;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+
+        .block-category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .category-title:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .block {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 20px;
+            cursor: move;
+            user-select: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+        }
+
+        .block:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .block.dragging {
+            transform: rotate(5deg) scale(1.1);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+
+        /* 中间工作区 */
+        .workspace {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workspace-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workspace-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .workspace-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .drop-zone {
+            height: calc(100% - 70px);
+            padding: 20px;
+            background: 
+                radial-gradient(circle at 20px 20px, rgba(78, 205, 196, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 40px 40px, rgba(255, 107, 107, 0.1) 2px, transparent 2px);
+            background-size: 40px 40px;
+            position: relative;
+            overflow-y: auto;
+            min-height: 400px;
+        }
+
+        .drop-zone.drag-over {
+            background-color: rgba(78, 205, 196, 0.1);
+            border: 2px dashed #4ecdc4;
+        }
+
+        .workspace-block {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 20px;
+            cursor: move;
+            user-select: none;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .workspace-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .workspace-block input {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: #333;
+            font-size: 14px;
+            width: 150px;
+        }
+
+        .block-remove {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            font-size: 16px;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .block-remove:hover {
+            transform: scale(1.2);
+            background: #ff5252;
+        }
+
+        /* 右侧预览区 */
+        .preview-panel {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            background: linear-gradient(45deg, #ffecd2, #fcb69f);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .preview-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cmd-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            min-height: 200px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .copy-btn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #44a08d;
+            transform: translateY(-2px);
+        }
+
+        /* 引导提示 */
+        .guide {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            font-size: 14px;
+            color: #333;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .guide.hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+            pointer-events: none;
+        }
+
+        .guide-close {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .blocks-panel, .preview-panel {
+                width: 100%;
+            }
+            
+            .workspace {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 5px;
+                gap: 5px;
+            }
+            
+            .blocks-panel, .preview-panel {
+                padding: 15px;
+            }
+            
+            .workspace-header {
+                padding: 10px 15px;
+            }
+            
+            .workspace-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="guide" id="guide">
+        👋 欢迎使用 Higheri EasyCMD！拖拽左侧积木到中间工作区，即可生成CMD指令
+        <button class="guide-close" onclick="closeGuide()">×</button>
+    </div>
+
+    <div class="container">
+        <!-- 左侧积木库 -->
+        <div class="blocks-panel">
+            <h3>🧩 CMD 积木库</h3>
+            
+            <div class="block-category">
+                <div class="category-title">📁 目录操作</div>
+                <div class="block" draggable="true" data-type="cd">
+                    <span>📂 切换目录 (cd)</span>
+                </div>
+                <div class="block" draggable="true" data-type="dir">
+                    <span>📋 列出文件 (dir)</span>
+                </div>
+                <div class="block" draggable="true" data-type="mkdir">
+                    <span>📁 新建文件夹 (mkdir)</span>
+                </div>
+                <div class="block" draggable="true" data-type="rmdir">
+                    <span>🗑️ 删除文件夹 (rmdir)</span>
+                </div>
+            </div>
+
+            <div class="block-category">
+                <div class="category-title">📄 文件操作</div>
+                <div class="block" draggable="true" data-type="copy">
+                    <span>📋 复制文件 (copy)</span>
+                </div>
+                <div class="block" draggable="true" data-type="move">
+                    <span>✂️ 移动文件 (move)</span>
+                </div>
+                <div class="block" draggable="true" data-type="del">
+                    <span>🗑️ 删除文件 (del)</span>
+                </div>
+                <div class="block" draggable="true" data-type="type">
+                    <span>👀 查看文件 (type)</span>
+                </div>
+                <div class="block" draggable="true" data-type="echo">
+                    <span>💬 输出文本 (echo)</span>
+                </div>
+            </div>
+
+            <div class="block-category">
+                <div class="category-title">⚙️ 系统管理</div>
+                <div class="block" draggable="true" data-type="cls">
+                    <span>🧹 清屏 (cls)</span>
+                </div>
+                <div class="block" draggable="true" data-type="pause">
+                    <span>⏸️ 暂停 (pause)</span>
+                </div>
+                <div class="block" draggable="true" data-type="exit">
+                    <span>🚪 退出 (exit)</span>
+                </div>
+                <div class="block" draggable="true" data-type="tasklist">
+                    <span>📊 任务列表 (tasklist)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间工作区 -->
+        <div class="workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">🎯 CMD 指令工作区</div>
+                <div class="workspace-controls">
+                    <button class="control-btn" onclick="clearWorkspace()">🗑️ 清空</button>
+                    <button class="control-btn" onclick="saveCommands()">💾 保存</button>
+                </div>
+            </div>
+            <div class="drop-zone" id="dropZone">
+                <div style="text-align: center; color: #999; margin-top: 100px; font-size: 16px;">
+                    🎯 将积木块拖拽到这里开始构建 CMD 指令<br>
+                    💡 积木块会按顺序执行
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧预览区 -->
+        <div class="preview-panel">
+            <div class="preview-header">
+                <h3>🚀 CMD 指令预览</h3>
+                <button class="generate-btn" onclick="generateCommand()">🎯 生成 CMD 指令</button>
+            </div>
+            <div class="preview-content">
+                <div class="cmd-output" id="cmdOutput">C:\> REM 生成的CMD指令将在这里显示
+REM 请先拖拽积木块到工作区</div>
+                <button class="copy-btn" onclick="copyCommand()">📋 复制指令</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let draggedElement = null;
+        let workspaceBlocks = [];
+        let blockCounter = 0;
+
+        // 积木块配置
+        const blockConfigs = {
+            cd: { 
+                name: 'cd', 
+                params: [{ name: 'path', placeholder: '输入路径，如 D:\\folder' }],
+                template: 'cd "{path}"'
+            },
+            dir: { 
+                name: 'dir', 
+                params: [{ name: 'path', placeholder: '输入路径（可选）' }],
+                template: 'dir "{path}"'
+            },
+            mkdir: { 
+                name: 'mkdir', 
+                params: [{ name: 'dirname', placeholder: '输入文件夹名称' }],
+                template: 'mkdir "{dirname}"'
+            },
+            rmdir: { 
+                name: 'rmdir', 
+                params: [{ name: 'dirname', placeholder: '输入要删除的文件夹名称' }],
+                template: 'rmdir "{dirname}" /s /q'
+            },
+            copy: { 
+                name: 'copy', 
+                params: [
+                    { name: 'source', placeholder: '源文件路径' },
+                    { name: 'dest', placeholder: '目标路径' }
+                ],
+                template: 'copy "{source}" "{dest}"'
+            },
+            move: { 
+                name: 'move', 
+                params: [
+                    { name: 'source', placeholder: '源文件路径' },
+                    { name: 'dest', placeholder: '目标路径' }
+                ],
+                template: 'move "{source}" "{dest}"'
+            },
+            del: { 
+                name: 'del', 
+                params: [{ name: 'filename', placeholder: '要删除的文件路径' }],
+                template: 'del "{filename}" /f /q'
+            },
+            type: { 
+                name: 'type', 
+                params: [{ name: 'filename', placeholder: '要查看的文件路径' }],
+                template: 'type "{filename}"'
+            },
+            echo: { 
+                name: 'echo', 
+                params: [{ name: 'text', placeholder: '要输出的文本' }],
+                template: 'echo {text}'
+            },
+            cls: { 
+                name: 'cls', 
+                params: [],
+                template: 'cls'
+            },
+            pause: { 
+                name: 'pause', 
+                params: [],
+                template: 'pause'
+            },
+            exit: { 
+                name: 'exit', 
+                params: [],
+                template: 'exit'
+            },
+            tasklist: { 
+                name: 'tasklist', 
+                params: [],
+                template: 'tasklist'
+            }
+        };
+
+        // 初始化拖拽事件
+        function initDragAndDrop() {
+            const blocks = document.querySelectorAll('.block');
+            const dropZone = document.getElementById('dropZone');
+
+            // 为每个积木块添加拖拽事件
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            // 为拖放区域添加事件
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('dragenter', handleDragEnter);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+            dropZone.addEventListener('drop', handleDrop);
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.type);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedElement = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.closest('.drop-zone').classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            if (!e.target.closest('.drop-zone').contains(e.relatedTarget)) {
+                e.target.closest('.drop-zone').classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.target.closest('.drop-zone');
+            dropZone.classList.remove('drag-over');
+            
+            const blockType = e.dataTransfer.getData('text/plain');
+            if (blockType && blockConfigs[blockType]) {
+                addBlockToWorkspace(blockType);
+            }
+        }
+
+        // 添加积木块到工作区
+        function addBlockToWorkspace(blockType) {
+            const config = blockConfigs[blockType];
+            const blockId = `block_${++blockCounter}`;
+            
+            const blockElement = document.createElement('div');
+            blockElement.className = 'workspace-block';
+            blockElement.id = blockId;
+            blockElement.draggable = true;
+            
+            let paramsHTML = '';
+            config.params.forEach((param, index) => {
+                paramsHTML += `<input type="text" placeholder="${param.placeholder}" 
+                    onchange="updateCommand()" data-param="${param.name}" />`;
+            });
+            
+            blockElement.innerHTML = `
+                <span>📦 ${config.name.toUpperCase()}</span>
+                ${paramsHTML}
+                <button class="block-remove" onclick="removeBlock('${blockId}')">×</button>
+            `;
+
+            const dropZone = document.getElementById('dropZone');
+            
+            // 如果是第一个块，替换提示文字
+            if (workspaceBlocks.length === 0) {
+                dropZone.innerHTML = '';
+            }
+            
+            dropZone.appendChild(blockElement);
+            
+            // 添加到工作区块数组
+            workspaceBlocks.push({
+                id: blockId,
+                type: blockType,
+                element: blockElement
+            });
+
+            // 添加工作区块的拖拽排序功能
+            initWorkspaceBlockDrag(blockElement);
+            
+            // 更新预览
+            updateCommand();
+
+            // 添加动画效果
+            setTimeout(() => {
+                blockElement.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    blockElement.style.transform = 'scale(1)';
+                }, 200);
+            }, 50);
+        }
+
+        // 初始化工作区块拖拽排序
+        function initWorkspaceBlockDrag(blockElement) {
+            blockElement.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', 'workspace-block');
+                e.target.style.opacity = '0.5';
+            });
+
+            blockElement.addEventListener('dragend', (e) => {
+                e.target.style.opacity = '1';
+            });
+
+            blockElement.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            blockElement.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedBlock = document.querySelector('.workspace-block[style*="opacity: 0.5"]');
+                if (draggedBlock && draggedBlock !== e.target) {
+                    const dropZone = document.getElementById('dropZone');
+                    const targetRect = e.target.getBoundingClientRect();
+                    const dropY = e.clientY;
+                    
+                    if (dropY < targetRect.top + targetRect.height / 2) {
+                        dropZone.insertBefore(draggedBlock, e.target);
+                    } else {
+                        dropZone.insertBefore(draggedBlock, e.target.nextSibling);
+                    }
+                    
+                    updateWorkspaceOrder();
+                    updateCommand();
+                }
+            });
+        }
+
+        // 更新工作区顺序
+        function updateWorkspaceOrder() {
+            const blocks = Array.from(document.querySelectorAll('.workspace-block'));
+            workspaceBlocks.sort((a, b) => {
+                return blocks.indexOf(a.element) - blocks.indexOf(b.element);
+            });
+        }
+
+        // 移除积木块
+        function removeBlock(blockId) {
+            const blockElement = document.getElementById(blockId);
+            if (blockElement) {
+                // 添加移除动画
+                blockElement.style.transform = 'scale(0) rotate(180deg)';
+                blockElement.style.opacity = '0';
+                
+                setTimeout(() => {
+                    blockElement.remove();
+                    workspaceBlocks = workspaceBlocks.filter(block => block.id !== blockId);
+                    
+                    // 如果没有积木块了，显示提示
+                    if (workspaceBlocks.length === 0) {
+                        const dropZone = document.getElementById('dropZone');
+                        dropZone.innerHTML = `
+                            <div style="text-align: center; color: #999; margin-top: 100px; font-size: 16px;">
+                                🎯 将积木块拖拽到这里开始构建 CMD 指令<br>
+                                💡 积木块会按顺序执行
+                            </div>
+                        `;
+                    }
+                    
+                    updateCommand();
+                }, 300);
+            }
+        }
+
+        // 更新命令预览
+        function updateCommand() {
+            const cmdOutput = document.getElementById('cmdOutput');
+            
+            if (workspaceBlocks.length === 0) {
+                cmdOutput.textContent = `C:\\> REM 生成的CMD指令将在这里显示
+REM 请先拖拽积木块到工作区`;
+                return;
+            }
+
+            let commands = ['@echo off', 'REM Generated by Higheri EasyCMD', ''];
+            
+            workspaceBlocks.forEach((block, index) => {
+                const config = blockConfigs[block.type];
+                let command = config.template;
+                
+                // 获取参数值
+                const inputs = block.element.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const paramName = input.dataset.param;
+                    let value = input.value.trim();
+                    
+                    // 处理空参数
+                    if (!value) {
+                        if (paramName === 'path' && (block.type === 'dir' || block.type === 'cd')) {
+                            value = block.type === 'dir' ? '.' : '..';
+                        } else if (block.type === 'echo' && paramName === 'text') {
+                            value = 'Hello World!';
+                        } else {
+                            value = `[请输入${input.placeholder}]`;
+                        }
+                    }
+                    
+                    command = command.replace(`{${paramName}}`, value);
+                });
+                
+                commands.push(`REM 第${index + 1}步: ${config.name.toUpperCase()}`);
+                commands.push(command);
+                commands.push('');
+            });
+            
+            commands.push('REM 执行完成');
+            commands.push('pause');
+            
+            cmdOutput.textContent = commands.join('\n');
+        }
+
+        // 生成并复制命令
+        function generateCommand() {
+            updateCommand();
+            const cmdOutput = document.getElementById('cmdOutput');
+            const commands = cmdOutput.textContent;
+            
+            // 创建临时文本区域
+            const textArea = document.createElement('textarea');
+            textArea.value = commands;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification('📋 CMD指令已复制到剪贴板！');
+            } catch (err) {
+                showNotification('❌ 复制失败，请手动复制');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // 复制命令
+        function copyCommand() {
+            generateCommand();
+        }
+
+        // 清空工作区
+        function clearWorkspace() {
+            if (workspaceBlocks.length === 0) return;
+            
+            if (confirm('🤔 确定要清空所有积木块吗？')) {
+                const dropZone = document.getElementById('dropZone');
+                dropZone.innerHTML = `
+                    <div style="text-align: center; color: #999; margin-top: 100px; font-size: 16px;">
+                        🎯 将积木块拖拽到这里开始构建 CMD 指令<br>
+                        💡 积木块会按顺序执行
+                    </div>
+                `;
+                workspaceBlocks = [];
+                updateCommand();
+                showNotification('🧹 工作区已清空！');
+            }
+        }
+
+        // 保存命令
+        function saveCommands() {
+            if (workspaceBlocks.length === 0) {
+                showNotification('❌ 没有可保存的命令');
+                return;
+            }
+            
+            updateCommand();
+            const commands = document.getElementById('cmdOutput').textContent;
+            const blob = new Blob([commands], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'higheri_easycmd_script.bat';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('💾 CMD批处理文件已保存！');
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #4ecdc4, #44a08d);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                box-shadow: 0 8px 32px rgba(78, 205, 196, 0.4);
+                z-index: 2000;
+                animation: notificationShow 0.5s ease-out forwards;
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes notificationShow {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                }
+                @keyframes notificationHide {
+                    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'notificationHide 0.3s ease-in forwards';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                    document.head.removeChild(style);
+                }, 300);
+            }, 2000);
+        }
+
+        // 关闭引导
+        function closeGuide() {
+            const guide = document.getElementById('guide');
+            guide.classList.add('hidden');
+            setTimeout(() => {
+                guide.style.display = 'none';
+            }, 300);
+        }
+
+        // 自动关闭引导（5秒后）
+        setTimeout(() => {
+            const guide = document.getElementById('guide');
+            if (guide && !guide.classList.contains('hidden')) {
+                closeGuide();
+            }
+        }, 5000);
+
+        // 增强的参数验证
+        function validateParams(blockType, params) {
+            const config = blockConfigs[blockType];
+            const errors = [];
+            
+            config.params.forEach((paramConfig, index) => {
+                const value = params[paramConfig.name];
+                
+                // 路径验证
+                if (paramConfig.name.includes('path') || paramConfig.name.includes('filename')) {
+                    if (value && (value.includes('<') || value.includes('>') || value.includes('|'))) {
+                        errors.push(`参数 ${paramConfig.name} 包含非法字符`);
+                    }
+                }
+                
+                // 必填参数验证
+                if (!value && ['dirname', 'filename', 'source', 'dest'].includes(paramConfig.name)) {
+                    errors.push(`参数 ${paramConfig.name} 不能为空`);
+                }
+            });
+            
+            return errors;
+        }
+
+        // 智能建议功能
+        function showSuggestions(input, paramName) {
+            const suggestions = {
+                'path': ['C:\\', 'D:\\', '.\\', '..\\', '%USERPROFILE%\\Desktop', '%TEMP%'],
+                'dirname': ['NewFolder', 'Backup', 'Documents', 'Projects'],
+                'filename': ['*.txt', '*.bat', '*.log', 'temp.txt'],
+                'text': ['Hello World!', 'Task Completed!', '操作成功！']
+            };
+            
+            if (suggestions[paramName]) {
+                // 这里可以实现下拉建议功能
+                console.log('Suggestions for', paramName, ':', suggestions[paramName]);
+            }
+        }
+
+        // 命令历史记录
+        let commandHistory = [];
+        
+        function saveToHistory() {
+            if (workspaceBlocks.length > 0) {
+                const snapshot = {
+                    timestamp: new Date().toISOString(),
+                    blocks: workspaceBlocks.map(block => ({
+                        type: block.type,
+                        params: Array.from(block.element.querySelectorAll('input')).map(input => ({
+                            name: input.dataset.param,
+                            value: input.value
+                        }))
+                    }))
+                };
+                commandHistory.push(snapshot);
+                
+                // 限制历史记录数量
+                if (commandHistory.length > 10) {
+                    commandHistory.shift();
+                }
+            }
+        }
+
+        // 键盘快捷键支持
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+S 保存
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                saveCommands();
+            }
+            
+            // Ctrl+C 复制
+            if (e.ctrlKey && e.key === 'c' && !e.target.matches('input')) {
+                e.preventDefault();
+                copyCommand();
+            }
+            
+            // Delete 清空
+            if (e.key === 'Delete' && !e.target.matches('input')) {
+                clearWorkspace();
+            }
+            
+            // Esc 关闭引导
+            if (e.key === 'Escape') {
+                closeGuide();
+            }
+        });
+
+        // 主题切换功能
+        let isDarkMode = false;
+        
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.style.filter = isDarkMode ? 'invert(1) hue-rotate(180deg)' : 'none';
+            
+            // 修正某些元素的颜色
+            if (isDarkMode) {
+                document.querySelectorAll('.cmd-output').forEach(el => {
+                    el.style.filter = 'invert(1) hue-rotate(180deg)';
+                });
+            } else {
+                document.querySelectorAll('.cmd-output').forEach(el => {
+                    el.style.filter = 'none';
+                });
+            }
+        }
+
+        // 导入/导出配置
+        function exportConfig() {
+            if (workspaceBlocks.length === 0) {
+                showNotification('❌ 没有可导出的配置');
+                return;
+            }
+            
+            const config = {
+                version: '1.0',
+                created: new Date().toISOString(),
+                blocks: workspaceBlocks.map(block => ({
+                    type: block.type,
+                    params: Array.from(block.element.querySelectorAll('input')).map(input => ({
+                        name: input.dataset.param,
+                        value: input.value
+                    }))
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'higheri_easycmd_config.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('📤 配置已导出！');
+        }
+        
+        function importConfig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const config = JSON.parse(e.target.result);
+                        loadConfig(config);
+                        showNotification('📥 配置已导入！');
+                    } catch (err) {
+                        showNotification('❌ 配置文件格式错误');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        function loadConfig(config) {
+            clearWorkspace();
+            
+            config.blocks.forEach(blockConfig => {
+                addBlockToWorkspace(blockConfig.type);
+                
+                // 设置参数值
+                const lastBlock = workspaceBlocks[workspaceBlocks.length - 1];
+                const inputs = lastBlock.element.querySelectorAll('input');
+                
+                blockConfig.params.forEach(param => {
+                    const input = Array.from(inputs).find(inp => inp.dataset.param === param.name);
+                    if (input) {
+                        input.value = param.value;
+                    }
+                });
+            });
+            
+            updateCommand();
+        }
+
+        // 初始化应用
+        function initApp() {
+            initDragAndDrop();
+            updateCommand();
+            
+            // 添加一些示例提示
+            setTimeout(() => {
+                if (workspaceBlocks.length === 0) {
+                    showNotification('💡 试试拖拽一个 "切换目录" 积木开始吧！');
+                }
+            }, 3000);
+            
+            console.log('🚀 Higheri EasyCMD 已启动！');
+            console.log('📝 支持的积木类型:', Object.keys(blockConfigs));
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // 错误处理
+        window.addEventListener('error', (e) => {
+            console.error('❌ 应用错误:', e.error);
+            showNotification('❌ 发生了一个错误，请刷新页面重试');
+        });
+
+        // 添加右键菜单功能
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.workspace-block')) {
+                e.preventDefault();
+                showContextMenu(e, e.target.closest('.workspace-block'));
+            }
+        });
+
+        function showContextMenu(e, blockElement) {
+            const menu = document.createElement('div');
+            menu.style.cssText = `
+                position: fixed;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                background: white;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                padding: 8px 0;
+                min-width: 120px;
+            `;
+            
+            const menuItems = [
+                { text: '📋 复制积木', action: () => copyBlock(blockElement) },
+                { text: '📝 编辑积木', action: () => editBlock(blockElement) },
+                { text: '🗑️ 删除积木', action: () => removeBlock(blockElement.id) }
+            ];
+            
+            menuItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.style.cssText = `
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    font-size: 14px;
+                `;
+                menuItem.textContent = item.text;
+                menuItem.addEventListener('click', () => {
+                    item.action();
+                    document.body.removeChild(menu);
+                });
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.backgroundColor = '#f0f0f0';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.backgroundColor = 'white';
+                });
+                menu.appendChild(menuItem);
+            });
+            
+            document.body.appendChild(menu);
+            
+            // 点击其他地方关闭菜单
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu() {
+                    if (document.body.contains(menu)) {
+                        document.body.removeChild(menu);
+                    }
+                    document.removeEventListener('click', closeMenu);
+                }, 100);
+            });
+        }
+
+        function copyBlock(blockElement) {
+            // 实现积木复制功能
+            const blockData = workspaceBlocks.find(b => b.element === blockElement);
+            if (blockData) {
+                addBlockToWorkspace(blockData.type);
+                showNotification('📋 积木已复制！');
+            }
+        }
+
+        function editBlock(blockElement) {
+            // 聚焦到第一个输入框
+            const firstInput = blockElement.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+                firstInput.select();
+            }
+        }
+    </script>
+</body>
+</html>

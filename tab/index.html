@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HigheriTab - 起始页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+    <div id="wallpaper"></div>
+    <div id="blur-overlay"></div>
+    
+    <div class="ms-logo">
+        <i class="fab fa-chrome"></i>
+        <span>HigheriTab</span>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>操作成功！</span>
+    </div>
+    
+    <header>
+        <button id="settings-btn">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+    
+    <main>
+        <div class="search-container">
+            <div class="logo" id="time-display"></div>
+            <div class="search-box">
+                <div class="search-engine-selector" id="engine-selector">
+                    <div class="search-engine-icon" id="engine-icon">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                </div>
+                <input type="text" class="search-input" id="search-input" placeholder="搜索互联网...">
+                <button class="search-btn" id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="quick-links" id="quick-links">
+            <!-- 快捷卡片将通过JS动态生成 -->
+        </div>
+    </main>
+    
+    <div id="settings-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-cog"></i> 设置面板</h2>
+            <button class="close-btn" id="close-settings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="settings-section">
+            <div class="section-header" data-section="engine">
+                <h3><i class="fas fa-search"></i> 搜索引擎设置</h3>
+                <div class="toggle-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="section-content" id="engine-content">
+                <div class="engine-list" id="engine-list">
+                    <!-- 搜索引擎将通过JS动态生成 -->
+                </div>
+                
+                <div class="add-engine-form">
+                    <h4><i class="fas fa-plus-circle"></i> 添加新搜索引擎</h4>
+                    <div class="form-group">
+                        <label for="new-engine-name"><i class="fas fa-font"></i> 引擎名称</label>
+                        <input type="text" id="new-engine-name" placeholder="例如：Bing">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-engine-url"><i class="fas fa-link"></i> 搜索网址 (使用 {q} 代表查询词)</label>
+                        <input type="text" id="new-engine-url" placeholder="例如：https://www.bing.com/search?q={q}">
+                    </div>
+                    <div class="form-actions">
+                        <button class="cancel-btn" id="cancel-engine">取消</button>
+                        <button class="save-btn" id="add-engine-btn">添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <div class="section-header" data-section="cards">
+                <h3><i class="fas fa-bookmark"></i> 快捷卡片管理</h3>
+                <div class="toggle-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="section-content" id="cards-content">
+                <div class="add-card-btn-container">
+                    <button class="add-card-btn" id="add-card-btn">
+                        <i class="fas fa-plus"></i> 添加新卡片
+                    </button>
+                </div>
+                
+                <div class="cards-grid" id="cards-list">
+                    <!-- 卡片将通过JS动态生成 -->
+                </div>
+                
+                <div class="add-card-form" id="card-form">
+                    <h4><i class="fas fa-plus-circle"></i> 添加快捷方式</h4>
+                    <div class="form-group">
+                        <label for="card-title"><i class="fas fa-heading"></i> 标题</label>
+                        <input type="text" id="card-title" placeholder="例如：Outlook">
+                    </div>
+                    <div class="form-group">
+                        <label for="card-url"><i class="fas fa-link"></i> 网址</label>
+                        <input type="text" id="card-url" placeholder="https://outlook.live.com">
+                    </div>
+                    <div class="form-actions">
+                        <button class="cancel-btn" id="cancel-card">取消</button>
+                        <button class="save-btn" id="save-card">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <div class="section-header" data-section="wallpaper">
+                <h3><i class="fas fa-image"></i> 壁纸与效果设置</h3>
+                <div class="toggle-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <div class="section-content" id="wallpaper-content">
+                <p>模糊程度: <span class="blur-value" id="blur-value">0</span>px</p>
+                <div class="blur-control">
+                    <input type="range" id="blur-range" min="0" max="20" value="0">
+                </div>
+                
+                <div class="upload-wallpaper">
+                    <p><i class="fas fa-cloud-upload-alt"></i> 上传自定义壁纸</p>
+                    <div class="upload-btn" id="upload-btn">
+                        <i class="fas fa-folder-open"></i> 选择图片文件
+                    </div>
+                    <input type="file" id="wallpaper-file" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="wallpaper-preview">
+                    <div class="wallpaper-item active" data-url="default"></div>
+                    <div class="wallpaper-item" data-url="https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"></div>
+                    <div class="wallpaper-item" data-url="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"></div>
+                    <div class="wallpaper-item" data-url="https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script
+      src="./script.js">
+    </script>
+
+</body>
+</html>

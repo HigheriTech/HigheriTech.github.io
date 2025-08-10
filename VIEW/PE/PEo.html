@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HigheriPE | STAR HigheriTech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0078D7;
+            --primary-light: #e6f2fa;
+            --primary-dark: #005a9e;
+            --secondary: #00b7c3;
+            --dark: #1e293b;
+            --light: #ffffff;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --dark-gray: #334155;
+            --border: #e2e8f0;
+            --card-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f9fc 0%, #e6f0f7 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* 导航栏 - 恢复原始尺寸 */
+        header {
+            padding: 15px 0; /* 恢复原始高度 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.7rem; /* 恢复原始大小 */
+            font-weight: 800;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 恢复原始间距 */
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px; /* 恢复原始间距 */
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 6px 0; /* 恢复原始内边距 */
+            font-size: 1.05rem; /* 恢复原始字体大小 */
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* 项目详情头部 - 优化背景图片 - 更小高度 */
+        .project-header {
+            color: white;
+            padding: 70px 0 40px; /* 减小内边距 */
+            margin-bottom: 40px; /* 减小底部间距 */
+            position: relative;
+            overflow: hidden;
+            min-height: 50vh; /* 减小高度 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: inset 0 -100px 100px -50px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 添加非常淡的深色覆盖层确保文字可读性 */
+        .project-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 1;
+        }
+
+        .project-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .project-icon {
+            width: 80px; /* 减小尺寸 */
+            height: 80px; /* 减小尺寸 */
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px; /* 减小圆角 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem; /* 减小图标 */
+            margin-bottom: 20px; /* 减小间距 */
+        }
+
+        .project-title {
+            font-size: 2.8rem; /* 减小字体 */
+            font-weight: 800;
+            margin-bottom: 15px; /* 减小间距 */
+            letter-spacing: -0.8px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem; /* 减小字体 */
+            max-width: 700px; /* 减小宽度 */
+            margin-bottom: 25px; /* 减小间距 */
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 20px; /* 减小间距 */
+            margin-top: 15px; /* 减小间距 */
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* 减小间距 */
+            font-size: 1rem; /* 减小字体 */
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 下载按钮区域 - 更紧凑 */
+        .download-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px; /* 减小内边距 */
+            width: 100%;
+            max-width: 700px; /* 减小宽度 */
+            margin: 20px auto; /* 减小外边距 */
+            text-align: center;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .download-title {
+            font-size: 1.6rem; /* 减小字体 */
+            margin-bottom: 15px; /* 减小间距 */
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* 减小间距 */
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 减小间距 */
+            padding: 14px 28px; /* 减小内边距 */
+            background: var(--light);
+            border-radius: 10px; /* 减小圆角 */
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem; /* 减小字体 */
+            transition: var(--transition);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid transparent;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .download-btn i {
+            font-size: 1.2rem; /* 减小图标 */
+        }
+
+        /* 项目详情内容 */
+        .project-detail {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px; /* 减小间距 */
+            margin-bottom: 60px; /* 减小间距 */
+        }
+
+        .project-content {
+            background: var(--light);
+            border-radius: 18px; /* 减小圆角 */
+            padding: 35px; /* 减小内边距 */
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-title {
+            font-size: 1.8rem; /* 减小字体 */
+            margin-bottom: 25px; /* 减小间距 */
+            position: relative;
+            font-weight: 700;
+            color: var(--dark);
+            padding-bottom: 12px; /* 减小间距 */
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px; /* 减小宽度 */
+            height: 3px; /* 减小高度 */
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .project-description {
+            font-size: 1.05rem; /* 减小字体 */
+            color: var(--dark);
+            margin-bottom: 25px; /* 减小间距 */
+            line-height: 1.7;
+        }
+
+        .project-features {
+            margin-bottom: 30px; /* 减小间距 */
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 减小宽度 */
+            gap: 20px; /* 减小间距 */
+        }
+
+        .feature-card {
+            background: var(--light-gray);
+            border-radius: 14px; /* 减小圆角 */
+            padding: 20px; /* 减小内边距 */
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            width: 50px; /* 减小尺寸 */
+            height: 50px; /* 减小尺寸 */
+            background: var(--primary-light);
+            border-radius: 12px; /* 减小圆角 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem; /* 减小图标 */
+            color: var(--primary);
+            margin-bottom: 15px; /* 减小间距 */
+        }
+
+        .feature-title {
+            font-size: 1.2rem; /* 减小字体 */
+            font-weight: 700;
+            margin-bottom: 8px; /* 减小间距 */
+            color: var(--dark);
+        }
+
+        .feature-desc {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: 0.95rem; /* 减小字体 */
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 减小宽度 */
+            gap: 15px; /* 减小间距 */
+            margin-bottom: 35px; /* 减小间距 */
+        }
+
+        .gallery-item {
+            height: 220px; /* 减小高度 */
+            border-radius: 14px; /* 减小圆角 */
+            overflow: hidden;
+            background: linear-gradient(45deg, var(--primary-light), #cfe7f8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem; /* 减小字体 */
+            position: relative;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 120, 215, 0.1) 0%, rgba(0, 120, 215, 0.3) 100%);
+        }
+
+        /* 项目侧边栏 */
+        .project-sidebar {
+            position: sticky;
+            top: 80px; /* 减小顶部位置 */
+            align-self: start;
+        }
+
+        .info-card {
+            background: var(--light);
+            border-radius: 18px; /* 减小圆角 */
+            padding: 25px; /* 减小内边距 */
+            margin-bottom: 25px; /* 减小间距 */
+            box-shadow: var(--card-shadow);
+        }
+
+        .tech-stack {
+            margin-bottom: 20px; /* 减小间距 */
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* 减小间距 */
+            margin-top: 12px; /* 减小间距 */
+        }
+
+        .tech-tag {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.9rem; /* 减小字体 */
+            padding: 7px 14px; /* 减小内边距 */
+            border-radius: 50px;
+            font-weight: 600;
+            border: 2px solid rgba(0, 120, 215, 0.2);
+        }
+
+        .project-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* 减小间距 */
+        }
+
+        .project-link {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* 减小间距 */
+            padding: 14px 18px; /* 减小内边距 */
+            background: var(--primary-light);
+            border-radius: 14px; /* 减小圆角 */
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            transition: var(--transition);
+            border: 2px solid rgba(0, 120, 215, 0.2);
+        }
+
+        .project-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .project-link i {
+            font-size: 1.4rem; /* 减小图标 */
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px; /* 减小间距 */
+            margin-top: 15px; /* 减小间距 */
+        }
+
+        .stat-item {
+            background: var(--light-gray);
+            border-radius: 14px; /* 减小圆角 */
+            padding: 18px; /* 减小内边距 */
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem; /* 减小字体 */
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem; /* 减小字体 */
+        }
+
+        /* 相关项目 */
+        .related-projects {
+            margin-bottom: 70px; /* 减小间距 */
+        }
+
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* 减小宽度 */
+            gap: 30px; /* 减小间距 */
+            margin-top: 35px; /* 减小间距 */
+        }
+
+        .project-card {
+            background: var(--light);
+            border-radius: 18px; /* 减小圆角 */
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        .project-img {
+            height: 180px; /* 减小高度 */
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-light), #cfe7f8);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.6rem; /* 减小字体 */
+            font-weight: 700;
+            text-align: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 120, 215, 0.1) 0%, rgba(0, 120, 215, 0.3) 100%);
+        }
+
+        .card-content {
+            padding: 22px; /* 减小内边距 */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.4rem; /* 减小字体 */
+            margin-bottom: 12px; /* 减小间距 */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 减小间距 */
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .card-title i {
+            color: var(--primary);
+            background: var(--primary-light);
+            width: 40px; /* 减小尺寸 */
+            height: 40px; /* 减小尺寸 */
+            border-radius: 10px; /* 减小圆角 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem; /* 减小图标 */
+        }
+
+        .card-desc {
+            color: var(--gray);
+            margin-bottom: 18px; /* 减小间距 */
+            line-height: 1.6;
+            font-size: 0.95rem; /* 减小字体 */
+            flex-grow: 1;
+        }
+
+        .card-links {
+            display: flex;
+            gap: 8px; /* 减小间距 */
+            margin-top: auto;
+        }
+
+        .card-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px; /* 减小间距 */
+            padding: 8px 16px; /* 减小内边距 */
+            border-radius: 8px; /* 减小圆角 */
+            font-size: 0.85rem; /* 减小字体 */
+            border: 2px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .card-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--dark-gray);
+            color: var(--light);
+            padding: 50px 0 25px; /* 减小内边距 */
+            border-top: 4px solid var(--primary);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 减小宽度 */
+            gap: 35px; /* 减小间距 */
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 25px; /* 减小内边距 */
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-title {
+            font-size: 1.3rem; /* 减小字体 */
+            font-weight: 700;
+            margin-bottom: 18px; /* 减小间距 */
+            position: relative;
+            padding-bottom: 10px; /* 减小间距 */
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 35px; /* 减小宽度 */
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem; /* 减小字体 */
+            font-weight: 800;
+            margin-bottom: 12px; /* 减小间距 */
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 8px; /* 减小间距 */
+        }
+
+        .footer-logo span {
+            color: var(--primary);
+        }
+
+        .footer-desc {
+            color: var(--light-gray);
+            margin-bottom: 20px; /* 减小间距 */
+            line-height: 1.6;
+            font-size: 0.9rem; /* 减小字体 */
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* 减小间距 */
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px; /* 减小间距 */
+        }
+
+        .contact-icon {
+            color: var(--primary);
+            font-size: 1rem; /* 减小图标 */
+            min-width: 18px; /* 减小宽度 */
+            padding-top: 3px;
+        }
+
+        .contact-text {
+            color: var(--light-gray);
+            line-height: 1.6;
+            font-size: 0.9rem; /* 减小字体 */
+        }
+
+        .contact-text a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-text a:hover {
+            color: var(--primary);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* 减小间距 */
+        }
+
+        .footer-links a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px; /* 减小间距 */
+            padding: 5px 0; /* 减小内边距 */
+            font-size: 0.9rem; /* 减小字体 */
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px; /* 减小间距 */
+            margin-top: 12px; /* 减小间距 */
+        }
+
+        .social-links a {
+            width: 38px; /* 减小尺寸 */
+            height: 38px; /* 减小尺寸 */
+            border-radius: 10px; /* 减小圆角 */
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.1rem; /* 减小图标 */
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 25px 0 12px; /* 减小内边距 */
+            margin-top: 40px; /* 减小间距 */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.85rem; /* 减小字体 */
+            line-height: 1.6;
+        }
+
+        .copyright a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .project-detail {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-sidebar {
+                position: relative;
+                top: 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px; /* 减小间距 */
+            }
+        }
+
+        @media (max-width: 900px) {
+            .project-title {
+                font-size: 2.4rem; /* 减小字体 */
+            }
+            
+            .project-subtitle {
+                font-size: 1.1rem; /* 减小字体 */
+            }
+            
+            .project-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 减小宽度 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-header {
+                padding: 50px 0 30px; /* 减小内边距 */
+                min-height: 45vh; /* 减小高度 */
+            }
+            
+            .project-title {
+                font-size: 2.2rem; /* 减小字体 */
+            }
+            
+            .section-title {
+                font-size: 1.7rem; /* 减小字体 */
+            }
+            
+            .project-content {
+                padding: 25px; /* 减小内边距 */
+            }
+            
+            .nav-links {
+                gap: 15px; /* 恢复原始间距 */
+                font-size: 1.05rem; /* 恢复原始字体大小 */
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .download-btn {
+                width: 100%;
+                max-width: 300px; /* 减小宽度 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px; /* 恢复原始间距 */
+            }
+            
+            .project-title {
+                font-size: 1.8rem; /* 减小字体 */
+            }
+            
+            .project-icon {
+                width: 70px; /* 减小尺寸 */
+                height: 70px; /* 减小尺寸 */
+                font-size: 1.8rem; /* 减小图标 */
+            }
+            
+            .project-meta {
+                flex-direction: column;
+                gap: 12px; /* 减小间距 */
+                align-items: center;
+            }
+            
+            .projects-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-title {
+                font-size: 1.4rem; /* 减小字体 */
+            }
+            
+            .nav-links {
+                gap: 12px; /* 移动端适当减小间距 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 - 恢复原始尺寸 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-laptop-code"></i>
+                    STAR<span>HigheriTech</span>
+                </a>
+                <div class="nav-links">
+                    <a href="/index.html">首页</a>
+                    <a href="#">项目</a>
+                    <a href="#" class="active">详情</a>
+                    <a href="#">联系</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 项目详情头部 - 使用原图背景 -->
+    <section class="project-header">
+        <div class="project-header-content">
+            <div class="project-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1 class="project-title">HigheriPE TOOLBOX</h1>
+            <p class="project-subtitle">功能强大的PE系统，支持市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。</p>
+            
+            <!-- 下载区域 -->
+            <div class="download-section">
+                <h2 class="download-title">下载</h2>
+                <div class="download-buttons">
+                    <!-- <a href="#" class="download-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>技术文档 (PDF)</span>
+                    </a> -->
+                    <!-- <a href="#" class="download-btn">
+                        <i class="fas fa-file-code"></i>
+                        <span>源代码 (ZIP)</span>
+                    </a> -->
+                    <a href="https://www.123pan.com/s/Wcrtjv-wwdpH.html" class="download-btn" target="_blank">
+                        <i class="fas fa-file-code"></i>
+                        <span>下载ISO镜像文件</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="project-meta">
+                <div class="meta-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>基于 Win 11 PE 开发</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>至今</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-users"></i>
+                    <span>HigheriDevelopment - 计算机软件开发组</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-star"></i>
+                    <span>旗舰产品</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目详情内容 -->
+    <div class="container">
+        <div class="project-detail">
+            <!-- 主要内容区 -->
+            <div class="project-content">
+                <h2 class="section-title">项目概述</h2>
+                <p class="project-description">
+                    功能强大的PE系统，附带市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
+                </p>
+                <p class="project-description">
+                    通过直观的用户界面和强大的装机必备软件体系，小白用户也能轻松装机，同时为高级用户提供高级工具。
+                </p>
+                
+                <h2 class="section-title">核心功能</h2>
+                <div class="project-features">
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h3 class="feature-title">EIX一键装机工具</h3>
+                            <p class="feature-desc">
+                                IT天空精品EIX一键装机工具，小白用户也能轻松装机。
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="feature-title">主流远程控制软件</h3>
+                            <p class="feature-desc">
+                                附带TODESK等主流远程控制软件，能让好友线上轻松帮助装机
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3 class="feature-title">市面上大部分装机必备软件</h3>
+                            <p class="feature-desc">
+                                提供30+市面上大部分装机必备软件。
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="feature-title">权限管理</h3>
+                            <p class="feature-desc">
+                                基于Windows原版的权限管理系统，确保数据安全性和访问控制。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">技术亮点</h2>
+                <p class="project-description">
+                    功能强大的PE系统，附带市面上大部分装机必备软件、附带IT天空精品EIX一键装机软件，小白也能立刻上手。
+                </p>
+                <p class="project-description">
+                    通过直观的用户界面和强大的装机必备软件体系，小白用户也能轻松装机，同时为高级用户提供高级工具。
+                </p>
+                
+                <!-- <h2 class="section-title">界面展示</h2>
+                <div class="gallery">
+                    <div class="gallery-item">仪表盘界面</div>
+                    <div class="gallery-item">数据源配置</div>
+                    <div class="gallery-item">报表编辑器</div>
+                    <div class="gallery-item">用户权限设置</div>
+                </div> -->
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="project-sidebar">
+                <div class="info-card">
+                    <h3 class="section-title">使用信息</h3>
+                    <div class="tech-stack">
+                        <div class="tech-tags">
+                            <span class="tech-tag">Win 11</span>
+                            <span class="tech-tag">ISO</span>
+                            <span class="tech-tag">外置包可修改</span>
+                            <!-- <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">Express</span>
+                            <span class="tech-tag">PostgreSQL</span>
+                            <span class="tech-tag">Elasticsearch</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">Kubernetes</span> -->
+                        </div>
+                    </div>
+                    
+                    <div class="project-links">
+                        <!-- <a href="#" class="project-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub 仓库</span>
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>在线演示</span> 
+                        </a> -->
+                        <!-- <a href="#" class="project-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>技术文档</span> -->
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="section-title">项目数据</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">30+</div>
+                            <div class="stat-label">装机必备工具</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">99%</div>
+                            <div class="stat-label">可自定义</div>
+                        </div>
+                        <!-- <div class="stat-item">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">开发人员</div>
+                        </div> 
+                        <div class="stat-item">
+                             <div class="stat-value">6</div>
+                            <div class="stat-label">月开发周期</div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        
+        <!-- 相关项目 
+        <section class="related-projects">
+            <h2 class="section-title">相关项目</h2>
+            <div class="projects-container">
+                 项目卡片 1 
+                <div class="project-card">
+                    <div class="project-img">电商平台</div>
+                    <div class="card-content">
+                        <h3 class="card-title">
+                            <i class="fas fa-shopping-bag"></i> 新一代电商平台
+                        </h3>
+                        <p class="card-desc">
+                            全栈电子商务解决方案，包含商品管理、支付集成和订单处理系统。
+                        </p>
+                        
+                        <div class="card-links">
+                            <a href="#" class="card-link">
+                                <i class="fab fa-github"></i> 源代码
+                            </a>
+                            <a href="#" class="card-link">
+                                <i class="fas fa-external-link-alt"></i> 演示
+                            </a>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- 项目卡片 2 
+                <div class="project-card">
+                    <div class="project-img">AI健康助手</div>
+                    <div class="card-content">
+                        <h3 class="card-title">
+                            <i class="fas fa-heartbeat"></i> AI健康助手
+                        </h3>
+                        <p class="card-desc">
+                            基于AI的健康监测系统，提供个性化健康建议和趋势预测。
+                        </p>
+                        
+                        <div class="card-links">
+                            <a href="#" class="card-link">
+                                <i class="fab fa-github"></i> 源代码
+                            </a>
+                            <a href="#" class="card-link">
+                                <i class="fas fa-mobile-alt"></i> 应用
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div> -->
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="footer-container">
+            <!-- 关于我 -->
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <i class="fas fa-laptop-code"></i> STAR<span>HigheriTech</span>
+                </div>
+                <p class="footer-desc">
+                    官方网站
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-bilibili"></i></a>
+                   <!-- <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-codepen"></i></a> -->
+                </div>
+            </div>
+
+            <!-- 联系信息 -->
+            <div class="footer-column">
+                <h3 class="footer-title">联系信息</h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-text">
+                            暂无<br>
+                            
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <div class="contact-text">
+                            <a href="tel:+8613812345678">暂无</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-text">
+                            <a href="mailto:contact@devportfolio.com">暂无</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速链接 -->
+            <div class="footer-column">
+                <h3 class="footer-title">快速链接</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-chevron-right"></i> 首页</a>
+                    <a href="#projects"><i class="fas fa-chevron-right"></i> 项目展示</a>
+                   <!-- <a href="#"><i class="fas fa-chevron-right"></i> 技术栈</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> 关于我</a>
+                    <a href="#contact"><i class="fas fa-chevron-right"></i> 联系方式</a> -->
+                </div>
+            </div>
+
+            <!-- 订阅更新 
+            <div class="footer-column">
+                <h3 class="footer-title">订阅更新</h3>
+                <p class="footer-desc">
+                    订阅我们的新闻通讯，获取最新项目更新和技术文章。
+                </p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="您的电子邮箱" required>
+                    <button type="submit">
+                        <i class="fas fa-paper-plane"></i> 订阅
+                    </button>
+                </form>
+            </div> -->
+        </div>
+
+        <!-- 版权信息 -->
+        <div class="copyright">
+            <p>&copy; 2025 STAR HigheriTech 信息活力工作室官方网站. 保留所有权利</p>
+            <p>设计制作: <a href="#">STAR HigheriTech Office</a> | <a href="https://pages.github.com/" target="_blank">Powered by Github Pages</a> | <a href="#">没有隐私政策与使用条款</a></p>
+        </div>
+    </footer>
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', () => {
+            const content = document.querySelector('.project-content');
+            const cards = document.querySelectorAll('.feature-card, .gallery-item');
+            const downloadSection = document.querySelector('.download-section');
+            
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(30px)';
+            content.style.transition = 'opacity 1s ease, transform 1s ease';
+            
+            downloadSection.style.opacity = '0';
+            downloadSection.style.transform = 'translateY(30px)';
+            downloadSection.style.transition = 'opacity 1s ease, transform 1s ease';
+            
+            setTimeout(() => {
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+                
+                downloadSection.style.opacity = '1';
+                downloadSection.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // 卡片动画
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(40px)';
+                card.style.transition = `opacity 0.7s ease ${index * 0.15}s, transform 0.7s ease ${index * 0.15}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 400 + index * 200);
+            });
+        });
+        
+        // 表单提交
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            alert(`感谢订阅！我们将发送更新到: ${email}`);
+            this.reset();
+        });
+        
+        // 下载按钮动画
+        const downloadBtns = document.querySelectorAll('.download-btn');
+        downloadBtns.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'translateY(-7px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
