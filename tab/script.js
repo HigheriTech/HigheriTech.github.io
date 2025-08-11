@@ -1,5 +1,5 @@
 
-        // Ä¬ÈÏÊı¾İ - Î¢Èí·ç¸ñ
+        // é»˜è®¤æ•°æ® - å¾®è½¯é£æ ¼
         const defaultData = {
             engines: [
                 { 
@@ -15,7 +15,7 @@
                     color: "#4285F4" 
                 },
                 { 
-                    name: "°Ù¶È", 
+                    name: "ç™¾åº¦", 
                     prefix: "https://www.baidu.com/s?wd={q}", 
                     icon: "fab fa-baidu", 
                     color: "#2932e1" 
@@ -46,15 +46,15 @@
             }
         };
 
-        // ×´Ì¬¹ÜÀí
+        // çŠ¶æ€ç®¡ç†
         let appState = {...defaultData};
         let addingNewCard = false;
         let editingCardIndex = -1;
         let addingNewEngine = false;
         let editingEngineIndex = -1;
-        let timeInterval; // ÓÃÓÚ´æ´¢Ê±¼ä¸üĞÂ¶¨Ê±Æ÷
+        let timeInterval; // ç”¨äºå­˜å‚¨æ—¶é—´æ›´æ–°å®šæ—¶å™¨
 
-        // DOMÔªËØÒıÓÃ
+        // DOMå…ƒç´ å¼•ç”¨
         const settingsBtn = document.getElementById('settings-btn');
         const settingsPanel = document.getElementById('settings-panel');
         const closeSettings = document.getElementById('close-settings');
@@ -84,9 +84,9 @@
         const cardForm = document.getElementById('card-form');
         const addCardBtn = document.getElementById('add-card-btn');
         const notification = document.getElementById('notification');
-        const timeDisplay = document.getElementById('time-display'); // Ê±¼äÏÔÊ¾ÔªËØ
+        const timeDisplay = document.getElementById('time-display'); // æ—¶é—´æ˜¾ç¤ºå…ƒç´ 
 
-        // ³õÊ¼»¯Ó¦ÓÃ
+        // åˆå§‹åŒ–åº”ç”¨
         function initApp() {
             loadSettings();
             renderSearchEngines();
@@ -94,10 +94,10 @@
             updateBlurEffect();
             setupEventListeners();
             setupCollapsibleSections();
-            startTimeUpdater(); // Æô¶¯Ê±¼ä¸üĞÂÆ÷
+            startTimeUpdater(); // å¯åŠ¨æ—¶é—´æ›´æ–°å™¨
         }
 
-        // ÉèÖÃÕÛµş²¿·Ö
+        // è®¾ç½®æŠ˜å éƒ¨åˆ†
         function setupCollapsibleSections() {
             document.querySelectorAll('.section-header').forEach(header => {
                 const section = header.dataset.section;
@@ -130,7 +130,7 @@
             });
         }
 
-        // ¼ÓÔØÉèÖÃ
+        // åŠ è½½è®¾ç½®
         function loadSettings() {
             const savedSettings = localStorage.getItem('startPageSettings');
             if (savedSettings) {
@@ -145,17 +145,17 @@
                         appState.currentEngine = 0;
                     }
                     
-                    // Ç¨ÒÆ¾É¿¨Æ¬Êı¾İ£¨Èç¹ûÈ±ÉÙletterÊôĞÔ£©
+                    // è¿ç§»æ—§å¡ç‰‡æ•°æ®ï¼ˆå¦‚æœç¼ºå°‘letterå±æ€§ï¼‰
                     if (appState.cards) {
                         appState.cards.forEach(card => {
                             if (!card.letter && card.title) {
-                                // Ö»È¡Ê××ÖÄ¸£¬¶ø²»ÊÇÕû¸öµ¥´Ê
+                                // åªå–é¦–å­—æ¯ï¼Œè€Œä¸æ˜¯æ•´ä¸ªå•è¯
                                 card.letter = card.title.charAt(0).toUpperCase();
                             }
                         });
                     }
                     
-                    // ÉèÖÃ±ÚÖ½
+                    // è®¾ç½®å£çº¸
                     if (appState.wallpaper && appState.wallpaper !== "default") {
                         wallpaperElement.style.backgroundImage = `url(${appState.wallpaper})`;
                     }
@@ -165,12 +165,12 @@
             }
         }
 
-        // ±£´æÉèÖÃ
+        // ä¿å­˜è®¾ç½®
         function saveSettings() {
             localStorage.setItem('startPageSettings', JSON.stringify(appState));
         }
 
-        // äÖÈ¾ËÑË÷ÒıÇæ
+        // æ¸²æŸ“æœç´¢å¼•æ“
         function renderSearchEngines() {
             engineList.innerHTML = '';
             
@@ -183,7 +183,7 @@
                     </div>
                     <div class="engine-details">
                         <div class="engine-title">${engine.name}</div>
-                        <div class="engine-url">${engine.prefix.replace('{q}', 'ËÑË÷´Ê')}</div>
+                        <div class="engine-url">${engine.prefix.replace('{q}', 'æœç´¢è¯')}</div>
                     </div>
                     <div class="engine-actions">
                         <button class="edit-engine" data-index="${index}"><i class="fas fa-edit"></i></button>
@@ -205,7 +205,7 @@
             
             updateCurrentEngine();
             
-            // ÉèÖÃÒıÇæ²Ù×÷ÊÂ¼ş¼àÌıÆ÷
+            // è®¾ç½®å¼•æ“æ“ä½œäº‹ä»¶ç›‘å¬å™¨
             document.querySelectorAll('.edit-engine').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const index = parseInt(e.target.closest('button').dataset.index);
@@ -221,7 +221,7 @@
             });
         }
 
-        // ±à¼­ËÑË÷ÒıÇæ
+        // ç¼–è¾‘æœç´¢å¼•æ“
         function editEngine(index) {
             const engine = appState.engines[index];
             newEngineName.value = engine.name;
@@ -229,52 +229,52 @@
             addingNewEngine = false;
             editingEngineIndex = index;
             
-            // È·±£ÒıÇæÉèÖÃ²¿·ÖÕ¹¿ª
+            // ç¡®ä¿å¼•æ“è®¾ç½®éƒ¨åˆ†å±•å¼€
             appState.collapsedSections.engine = false;
             engineContent.classList.add('expanded');
             document.querySelector('[data-section="engine"] .toggle-icon i')
                 .classList.replace('fa-chevron-down', 'fa-chevron-up');
         }
 
-        // É¾³ıËÑË÷ÒıÇæ
+        // åˆ é™¤æœç´¢å¼•æ“
         function deleteEngine(index) {
             if (appState.engines.length <= 1) {
-                showNotification('ÖÁÉÙ±£ÁôÒ»¸öËÑË÷ÒıÇæ');
+                showNotification('è‡³å°‘ä¿ç•™ä¸€ä¸ªæœç´¢å¼•æ“');
                 return;
             }
             
-            if (confirm('È·¶¨ÒªÉ¾³ıÕâ¸öËÑË÷ÒıÇæÂğ£¿')) {
+            if (confirm('ç¡®å®šè¦åˆ é™¤è¿™ä¸ªæœç´¢å¼•æ“å—ï¼Ÿ')) {
                 appState.engines.splice(index, 1);
                 if (appState.currentEngine >= index) {
                     appState.currentEngine = Math.max(0, appState.currentEngine - 1);
                 }
                 renderSearchEngines();
                 saveSettings();
-                showNotification('ËÑË÷ÒıÇæÒÑÉ¾³ı');
+                showNotification('æœç´¢å¼•æ“å·²åˆ é™¤');
             }
         }
 
-        // ¸üĞÂµ±Ç°ÒıÇæ
+        // æ›´æ–°å½“å‰å¼•æ“
         function updateCurrentEngine() {
             const currentEngine = appState.engines[appState.currentEngine];
             engineIcon.innerHTML = `<i class="${currentEngine.icon}"></i>`;
             engineIcon.style.background = currentEngine.color;
         }
 
-        // äÖÈ¾¿¨Æ¬ - Ö§³ÖÎŞÏŞ¿¨Æ¬
+        // æ¸²æŸ“å¡ç‰‡ - æ”¯æŒæ— é™å¡ç‰‡
         function renderCards() {
             quickLinks.innerHTML = '';
             cardsList.innerHTML = '';
             
             appState.cards.forEach((card, index) => {
-                // Ö÷Ò³¿¨Æ¬
+                // ä¸»é¡µå¡ç‰‡
                 const linkCard = document.createElement('div');
                 linkCard.className = 'link-card';
                 
-                // Ê¹ÓÃÊ××ÖÄ¸Í¼±ê£¨Ö»ÏÔÊ¾Ê××ÖÄ¸£©
+                // ä½¿ç”¨é¦–å­—æ¯å›¾æ ‡ï¼ˆåªæ˜¾ç¤ºé¦–å­—æ¯ï¼‰
                 const letterIcon = document.createElement('div');
                 letterIcon.className = 'letter-icon';
-                // È·±£Ö»ÏÔÊ¾Ê××ÖÄ¸
+                // ç¡®ä¿åªæ˜¾ç¤ºé¦–å­—æ¯
                 letterIcon.textContent = card.letter ? card.letter.charAt(0) : card.title.charAt(0);
                 
                 linkCard.appendChild(letterIcon);
@@ -283,7 +283,7 @@
                 linkCard.addEventListener('click', () => window.open(card.url, '_blank'));
                 quickLinks.appendChild(linkCard);
                 
-                // ÉèÖÃÃæ°å¿¨Æ¬
+                // è®¾ç½®é¢æ¿å¡ç‰‡
                 const cardItem = document.createElement('div');
                 cardItem.className = 'card-item';
                 cardItem.innerHTML = `
@@ -300,7 +300,7 @@
                 cardsList.appendChild(cardItem);
             });
             
-            // Ìí¼Ó"Ìí¼Ó¿¨Æ¬"°´Å¥ - Ö§³ÖÎŞÏŞÌí¼Ó
+            // æ·»åŠ "æ·»åŠ å¡ç‰‡"æŒ‰é’® - æ”¯æŒæ— é™æ·»åŠ 
             const addCard = document.createElement('div');
             addCard.className = 'link-card add-card';
             addCard.innerHTML = '<i class="fas fa-plus"></i>';
@@ -310,16 +310,16 @@
                 cardTitle.value = '';
                 cardUrl.value = '';
                 
-                // ´ò¿ªÉèÖÃÃæ°å
+                // æ‰“å¼€è®¾ç½®é¢æ¿
                 settingsPanel.classList.add('active');
                 
-                // Õ¹¿ª¿¨Æ¬ÉèÖÃ²¿·Ö
+                // å±•å¼€å¡ç‰‡è®¾ç½®éƒ¨åˆ†
                 appState.collapsedSections.cards = false;
                 cardsContent.classList.add('expanded');
                 document.querySelector('[data-section="cards"] .toggle-icon i')
                     .classList.replace('fa-chevron-down', 'fa-chevron-up');
                 
-                // ¹ö¶¯µ½±íµ¥²¢¸ßÁÁ
+                // æ»šåŠ¨åˆ°è¡¨å•å¹¶é«˜äº®
                 setTimeout(() => {
                     cardForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     cardForm.classList.add('highlighted');
@@ -328,7 +328,7 @@
             });
             quickLinks.appendChild(addCard);
             
-            // ÉèÖÃ¿¨Æ¬²Ù×÷ÊÂ¼ş¼àÌıÆ÷
+            // è®¾ç½®å¡ç‰‡æ“ä½œäº‹ä»¶ç›‘å¬å™¨
             document.querySelectorAll('.edit-card').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const index = parseInt(e.target.closest('button').dataset.index);
@@ -344,7 +344,7 @@
             });
         }
 
-        // ±à¼­¿¨Æ¬
+        // ç¼–è¾‘å¡ç‰‡
         function editCard(index) {
             const card = appState.cards[index];
             cardTitle.value = card.title;
@@ -352,16 +352,16 @@
             addingNewCard = false;
             editingCardIndex = index;
             
-            // ´ò¿ªÉèÖÃÃæ°å
+            // æ‰“å¼€è®¾ç½®é¢æ¿
             settingsPanel.classList.add('active');
             
-            // Õ¹¿ª¿¨Æ¬ÉèÖÃ²¿·Ö
+            // å±•å¼€å¡ç‰‡è®¾ç½®éƒ¨åˆ†
             appState.collapsedSections.cards = false;
             cardsContent.classList.add('expanded');
             document.querySelector('[data-section="cards"] .toggle-icon i')
                 .classList.replace('fa-chevron-down', 'fa-chevron-up');
                 
-            // ¹ö¶¯µ½±íµ¥²¢¸ßÁÁ
+            // æ»šåŠ¨åˆ°è¡¨å•å¹¶é«˜äº®
             setTimeout(() => {
                 cardForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 cardForm.classList.add('highlighted');
@@ -369,17 +369,17 @@
             }, 300);
         }
 
-        // É¾³ı¿¨Æ¬
+        // åˆ é™¤å¡ç‰‡
         function deleteCard(index) {
-            if (confirm('È·¶¨ÒªÉ¾³ıÕâ¸ö¿¨Æ¬Âğ£¿')) {
+            if (confirm('&#x786E;&#x5B9A;&#x8981;&#x5220;&#x9664;&#x8FD9;&#x4E2A;&#x5361;&#x7247;&#x5417;&#xFF1F;')) {//ç¡®å®šè¦åˆ é™¤è¿™ä¸ªå¡ç‰‡å—ï¼Ÿ
                 appState.cards.splice(index, 1);
                 renderCards();
                 saveSettings();
-                showNotification('¿¨Æ¬ÒÑÉ¾³ı');
+                showNotification('&#x5361;&#x7247;&#x5DF2;&#x5220;&#x9664;');//å¡ç‰‡å·²åˆ é™¤
             }
         }
 
-        // ÏÔÊ¾Í¨Öª
+        // æ˜¾ç¤ºé€šçŸ¥
         function showNotification(message) {
             const icon = notification.querySelector('i');
             const text = notification.querySelector('span');
@@ -393,41 +393,41 @@
             }, 3000);
         }
 
-        // ±£´æ¿¨Æ¬
+        // ä¿å­˜å¡ç‰‡
         function saveCard() {
             const title = cardTitle.value.trim();
             const url = cardUrl.value.trim();
             
             if (!title || !url) {
-                showNotification('ÇëÌîĞ´±êÌâºÍÍøÖ·');
+                showNotification('&#x8BF7;&#x586B;&#x5199;&#x6807;&#x9898;&#x548C;&#x7F51;&#x5740;');//è¯·å¡«å†™æ ‡é¢˜å’Œç½‘å€
                 return;
             }
             
-            // È·±£URLÓĞĞ­ÒéÇ°×º
+            // ç¡®ä¿URLæœ‰åè®®å‰ç¼€
             let validUrl = url;
             if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
                 validUrl = 'https://' + validUrl;
             }
             
-            // ÌáÈ¡Ê××ÖÄ¸×÷ÎªÍ¼±ê£¨Ö»È¡Ê××ÖÄ¸£©
+            // æå–é¦–å­—æ¯ä½œä¸ºå›¾æ ‡ï¼ˆåªå–é¦–å­—æ¯ï¼‰
             const letter = title.charAt(0).toUpperCase();
             
             if (addingNewCard) {
-                // Ìí¼ÓĞÂ¿¨Æ¬ - Ö§³ÖÎŞÏŞÌí¼Ó
+                // æ·»åŠ æ–°å¡ç‰‡ - æ”¯æŒæ— é™æ·»åŠ 
                 appState.cards.push({ 
                     title, 
                     url: validUrl, 
                     letter
                 });
-                showNotification('¿¨Æ¬Ìí¼Ó³É¹¦£¡');
+                showNotification('&#x5361;&#x7247;&#x6DFB;&#x52A0;&#x6210;&#x529F;&#xFF01;');//å¡ç‰‡æ·»åŠ æˆåŠŸ
             } else if (editingCardIndex !== -1) {
-                // ¸üĞÂÏÖÓĞ¿¨Æ¬
+                // æ›´æ–°ç°æœ‰å¡ç‰‡
                 appState.cards[editingCardIndex] = { 
                     title, 
                     url: validUrl, 
                     letter
                 };
-                showNotification('¿¨Æ¬¸üĞÂ³É¹¦£¡');
+                showNotification('&#x5361;&#x7247;&#x66F4;&#x65B0;&#x6210;&#x529F;&#xFF01;');//å¡ç‰‡æ›´æ–°æˆåŠŸ
             }
             
             renderCards();
@@ -437,39 +437,39 @@
             editingCardIndex = -1;
         }
 
-        // ±£´æËÑË÷ÒıÇæ
+        // ä¿å­˜æœç´¢å¼•æ“
         function saveEngine() {
             const name = newEngineName.value.trim();
             const url = newEngineUrl.value.trim();
             
             if (!name || !url) {
-                showNotification('ÇëÌîĞ´Ãû³ÆºÍÍøÖ·');
+                showNotification('&#x8BF7;&#x586B;&#x5199;&#x540D;&#x79F0;&#x548C;&#x7F51;&#x5740;');//è¯·å¡«å†™åç§°å’Œç½‘å€
                 return;
             }
             
             if (!url.includes('{q}')) {
-                showNotification('ÍøÖ·ÖĞ±ØĞë°üº¬ {q} ×÷Îª²éÑ¯´ÊÕ¼Î»·û');
+                showNotification('&#x7F51;&#x5740;&#x4E2D;&#x5FC5;&#x987B;&#x5305;&#x542B; {q} &#x4F5C;&#x4E3A;&#x67E5;&#x8BE2;&#x8BCD;&#x5360;&#x4F4D;&#x7B26;');
                 return;
             }
             
             if (addingNewEngine) {
-                // Ìí¼ÓĞÂÒıÇæ
+                // æ·»åŠ æ–°å¼•æ“
                 appState.engines.push({ 
                     name, 
                     prefix: url,
                     icon: 'fas fa-search',
                     color: '#0078D7'
                 });
-                showNotification('ËÑË÷ÒıÇæÌí¼Ó³É¹¦£¡');
+                showNotification('&#x641C;&#x7D22;&#x5F15;&#x64CE;&#x6DFB;&#x52A0;&#x6210;&#x529F;&#xFF01;');//æœç´¢å¼•æ“æ·»åŠ ~~~
             } else if (editingEngineIndex !== -1) {
-                // ¸üĞÂÏÖÓĞÒıÇæ
+                // æ›´æ–°ç°æœ‰å¼•æ“
                 appState.engines[editingEngineIndex] = { 
                     name, 
                     prefix: url,
                     icon: appState.engines[editingEngineIndex].icon || 'fas fa-search',
                     color: appState.engines[editingEngineIndex].color || '#0078D7'
                 };
-                showNotification('ËÑË÷ÒıÇæ¸üĞÂ³É¹¦£¡');
+                showNotification('&#x641C;&#x7D22;&#x5F15;&#x64CE;&#x66F4;&#x65B0;&#x6210;&#x529F;&#xFF01;');//æœç´¢å¼•æ“æ›´æ–°~~~
             }
             
             renderSearchEngines();
@@ -479,7 +479,7 @@
             editingEngineIndex = -1;
         }
 
-        // ¸üĞÂÄ£ºıĞ§¹û
+        // æ›´æ–°æ¨¡ç³Šæ•ˆæœ
         function updateBlurEffect() {
             blurOverlay.style.backdropFilter = `blur(${appState.blurLevel}px)`;
             blurOverlay.style.webkitBackdropFilter = `blur(${appState.blurLevel}px)`;
@@ -487,7 +487,7 @@
             blurRange.value = appState.blurLevel;
         }
 
-        // ¸üĞÂÊ±¼äÏÔÊ¾
+        // æ›´æ–°æ—¶é—´æ˜¾ç¤º
         function updateTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -495,23 +495,23 @@
             timeDisplay.textContent = `${hours}:${minutes}`;
         }
 
-        // Æô¶¯Ê±¼ä¸üĞÂÆ÷
+        // å¯åŠ¨æ—¶é—´æ›´æ–°å™¨
         function startTimeUpdater() {
-            updateTime(); // Á¢¼´¸üĞÂÒ»´Î
-            timeInterval = setInterval(updateTime, 1000); // Ã¿Ãë¸üĞÂÒ»´Î
+            updateTime(); // ç«‹å³æ›´æ–°ä¸€æ¬¡
+            timeInterval = setInterval(updateTime, 1000); // æ¯ç§’æ›´æ–°ä¸€æ¬¡
         }
 
-        // ÉèÖÃÊÂ¼ş¼àÌı
+        // è®¾ç½®äº‹ä»¶ç›‘å¬
         function setupEventListeners() {
-            // ÉèÖÃÃæ°å¿ª¹Ø
+            // è®¾ç½®é¢æ¿å¼€å…³
             settingsBtn.addEventListener('click', () => settingsPanel.classList.add('active'));
             closeSettings.addEventListener('click', () => settingsPanel.classList.remove('active'));
             
-            // ËÑË÷¹¦ÄÜ
+            // æœç´¢åŠŸèƒ½
             searchBtn.addEventListener('click', performSearch);
             searchInput.addEventListener('keypress', (e) => e.key === 'Enter' && performSearch());
             
-            // Ìí¼ÓËÑË÷ÒıÇæ
+            // æ·»åŠ æœç´¢å¼•æ“
             addEngineBtn.addEventListener('click', saveEngine);
             cancelEngineBtn.addEventListener('click', () => {
                 newEngineName.value = '';
@@ -519,7 +519,7 @@
                 editingEngineIndex = -1;
             });
             
-            // ¿¨Æ¬²Ù×÷
+            // å¡ç‰‡æ“ä½œ
             saveCardBtn.addEventListener('click', saveCard);
             cancelCardBtn.addEventListener('click', () => {
                 cardTitle.value = '';
@@ -527,14 +527,14 @@
                 editingCardIndex = -1;
             });
             
-            // Ä£ºı¿ØÖÆ
+            // æ¨¡ç³Šæ§åˆ¶
             blurRange.addEventListener('input', () => {
                 appState.blurLevel = parseInt(blurRange.value);
                 updateBlurEffect();
                 saveSettings();
             });
             
-            // ±ÚÖ½ÉÏ´«
+            // å£çº¸ä¸Šä¼ 
             uploadBtn.addEventListener('click', () => wallpaperFile.click());
             
             wallpaperFile.addEventListener('change', (e) => {
@@ -545,13 +545,13 @@
                         appState.wallpaper = event.target.result;
                         wallpaperElement.style.backgroundImage = `url(${appState.wallpaper})`;
                         saveSettings();
-                        showNotification('±ÚÖ½ÉèÖÃ³É¹¦£¡');
+                        showNotification('&#x58C1;&#x7EB8;&#x8BBE;&#x7F6E;&#x6210;&#x529F;&#xFF01;');//å£çº¸è®¾ç½®æˆåŠŸï¼
                     };
                     reader.readAsDataURL(file);
                 }
             });
             
-            // Ô¤Éè±ÚÖ½Ñ¡Ôñ
+            // é¢„è®¾å£çº¸é€‰æ‹©
             document.querySelectorAll('.wallpaper-item').forEach(item => {
                 item.addEventListener('click', () => {
                     document.querySelectorAll('.wallpaper-item').forEach(el => el.classList.remove('active'));
@@ -566,24 +566,24 @@
                         appState.wallpaper = url;
                     }
                     saveSettings();
-                    showNotification('±ÚÖ½ÉèÖÃ³É¹¦£¡');
+                    showNotification('å£çº¸è®¾ç½®æˆåŠŸï¼');
                 });
             });
             
-            // Ìí¼ÓĞÂ¿¨Æ¬°´Å¥£¨ÔÚÉèÖÃÃæ°åÄÚ²¿£©
+            // æ·»åŠ æ–°å¡ç‰‡æŒ‰é’®ï¼ˆåœ¨è®¾ç½®é¢æ¿å†…éƒ¨ï¼‰
             addCardBtn.addEventListener('click', () => {
                 addingNewCard = true;
                 editingCardIndex = -1;
                 cardTitle.value = '';
                 cardUrl.value = '';
                 
-                // È·±£¿¨Æ¬ÉèÖÃ²¿·ÖÕ¹¿ª
+                // ç¡®ä¿å¡ç‰‡è®¾ç½®éƒ¨åˆ†å±•å¼€
                 appState.collapsedSections.cards = false;
                 cardsContent.classList.add('expanded');
                 document.querySelector('[data-section="cards"] .toggle-icon i')
                     .classList.replace('fa-chevron-down', 'fa-chevron-up');
                 
-                // ¹ö¶¯µ½±íµ¥²¢¸ßÁÁ
+                // æ»šåŠ¨åˆ°è¡¨å•å¹¶é«˜äº®
                 setTimeout(() => {
                     cardForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     cardForm.classList.add('highlighted');
@@ -592,7 +592,7 @@
             });
         }
 
-        // Ö´ĞĞËÑË÷
+        // æ‰§è¡Œæœç´¢
         function performSearch() {
             const query = searchInput.value.trim();
             if (query) {
@@ -602,13 +602,13 @@
             }
         }
 
-        // ÇåÀí¶¨Ê±Æ÷
+        // æ¸…ç†å®šæ—¶å™¨
         function cleanup() {
             if (timeInterval) {
                 clearInterval(timeInterval);
             }
         }
 
-        // Æô¶¯Ó¦ÓÃ
+        // å¯åŠ¨åº”ç”¨
         window.addEventListener('DOMContentLoaded', initApp);
         window.addEventListener('beforeunload', cleanup);
